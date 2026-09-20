@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import { Vehicle } from "../../domain/entities/Vehicle";
-import { IVehicleRepository } from "../../domain/ports/IVehicle.Repository";
+import { IVehicleRepository } from "../../domain/ports/IVehicle.repository";
 import { VehicleEntity } from "../persistence/Vehicles.Entity";
 
 export class VehicleRepository implements IVehicleRepository{
@@ -66,7 +66,7 @@ export class VehicleRepository implements IVehicleRepository{
         entity.model_vehicle = vehicle.model;
         entity.color_vehicle = vehicle.color;
         entity.type_vehicle = vehicle.type;
-        entity.is_authorized_vehicle = true;
+        entity.is_authorized_vehicle = vehicle.is_authorized;
         entity.id_owner_vehicle = vehicle.id_owner;
         return entity;
     }

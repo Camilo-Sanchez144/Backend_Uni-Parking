@@ -1,6 +1,6 @@
 // infrastructure/controllers/Vehicle.controller.instance.ts
 import { AppDataSource } from "../../../../shared/config/database";
-import { VehicleRepository } from "../adapters/Vehicle.Repository";
+import { VehicleRepository } from "../adapters/Vehicle.repository";
 import { AddVehicleUseCase } from "../../application/use-cases/AddVehicleUseCase";
 import { AuthorizeVehicleUseCase } from "../../application/use-cases/AuthorizeVehicleUseCase";
 import { DeauthorizeVehicleUseCase } from "../../application/use-cases/DeauthorizeVehicleUseCase";
@@ -8,7 +8,7 @@ import { GetAllVehiclesUseCase } from "../../application/use-cases/GetAllVehicle
 import { GetVehicleByPlateUseCase } from "../../application/use-cases/GetVehicleByPlateUseCase";
 import { GetVehiclesDeauthorizedUseCase } from "../../application/use-cases/GetVehiclesDeauthorizedUseCase";
 import { UpdateVehicleUseCase } from "../../application/use-cases/UpdateVehicleUseCase";
-import { VehicleController } from "./Vehicle.Controller";
+import { VehicleController } from "./Vehicle.controller";
 
 const vehicleRepository = new VehicleRepository(AppDataSource);
 

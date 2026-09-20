@@ -10,6 +10,8 @@ import { GetAllVehiclesUseCase } from "../../application/use-cases/GetAllVehicle
 import { GetVehicleByPlateUseCase } from "../../application/use-cases/GetVehicleByPlateUseCase";
 import { GetVehiclesDeauthorizedUseCase } from "../../application/use-cases/GetVehiclesDeauthorizedUseCase";
 import { UpdateVehicleUseCase } from "../../application/use-cases/UpdateVehicleUseCase";
+import { validateCreateVehicle } from "../validations/CreateVehicle.validation";
+import { validateUpdateVehicle } from "../validations/UpdateVehicle.validation";
 
 export class VehicleController {
     constructor(
@@ -22,86 +24,117 @@ export class VehicleController {
         private readonly updateVehicle: UpdateVehicleUseCase
     ) {}
 
-    createVehicle = async (req: Request, res: Response): Promise<void> => {
+    createVehicle = async (req: Request, res: Response) => {
         try {
-        const dto = plainToInstance(CreateVehicleDto, req.body);
-        const errors = await validate(dto);
-        if (errors.length > 0) {
-            res.status(400).json({ mensaje: 'Error en la validación', errors });
-            return;
-        }
-        const record = await this.addVehicle.execute(dto);
-        res.status(201).json(record);
-        } catch (err: any) {
-        res.status(404).json({ message: err.message });
+            const { error, value } = validateCreateVehicle(req.body);
+
+            if (error) {
+                res.status(400).json({ mensaje: 'Error en la validación', detail: error.details });
+                return;
+            }
+
+            const record = await this.addVehicle.execute(value);
+            res.status(201).json(record);
+        } catch (err) {
+            if (err instanceof Error) {
+                res.status(500).json({ error: "Error interno del servidor", details: err.message });
+            }
         }
     }
 
-    authorize = async (req: Request, res: Response): Promise<void> => {
+    authorize = async (req: Request, res: Response) => {
         try {
-        const plate = String(req.params.plate);
-        await this.authorizeVehicle.execute(plate);
-        res.status(200).json({ message: 'vehículo autorizado' });
-        } catch (err: any) {
-        res.status(404).json({ message: err.message });
+            const plate = String(req.params.plate);
+            await this.authorizeVehicle.execute(plate);
+            res.status(200).json({ message: 'vehículo autorizado' });
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({
+                    error: "Error interno del servidor",
+                    details: error.message
+                });
+            }
         }
     }
 
-    remove = async (req: Request, res: Response): Promise<void> => {
+    remove = async (req: Request, res: Response) => {
         try {
-        const plate = String(req.params.plate);
-        await this.deauthorizeVehicle.execute(plate);
-        res.status(200).json({ message: 'vehículo desautorizado' });
-        } catch (err: any) {
-        res.status(404).json({ message: err.message });
+            const plate = String(req.params.plate);
+            await this.deauthorizeVehicle.execute(plate);
+            res.status(200).json({ message: 'vehículo desautorizado' });
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({
+                    error: "Error interno del servidor",
+                    details: error.message
+                });
+            }
         }
     }
 
-    findAll = async (req: Request, res: Response): Promise<void> => {
+    findAll = async (req: Request, res: Response) => {
         try {
-        const vehicles = await this.getAllVehicles.execute();
-        res.status(200).json(vehicles);
-        } catch (err: any) {
-        res.status(404).json({ message: err.message });
+            const vehicles = await this.getAllVehicles.execute();
+            res.status(200).json(vehicles);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({
+                    error: "Error interno del servidor",
+                    details: error.message
+                });
+            }
         }
     }
 
-    findByPlate = async (req: Request, res: Response): Promise<void> => {
+    findByPlate = async (req: Request, res: Response) => {
         try {
-        const plate = String(req.params.plate);
-        const vehicle = await this.getVehicleByPlate.execute(plate);
-        if (!vehicle) {
-            res.status(404).json({ message: "Vehículo no encontrado" });
-            return;
-        }
-        res.status(200).json(vehicle);
-        } catch (err: any) {
-        res.status(404).json({ message: err.message });
+            const plate = String(req.params.plate);
+            const vehicle = await this.getVehicleByPlate.execute(plate);
+            if (!vehicle) {
+                res.status(404).json({ message: "Vehículo no encontrado" });
+                return;
+            }
+            res.status(200).json(vehicle);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({
+                    error: "Error interno del servidor",
+                    details: error.message
+                });
+            }
         }
     }
 
-    findDeauthorized = async (req: Request, res: Response): Promise<void> => {
+    findDeauthorized = async (req: Request, res: Response) => {
         try {
-        const vehicles = await this.getVehiclesDeauthorized.execute();
-        res.status(200).json(vehicles);
-        } catch (err: any) {
-        res.status(404).json({ message: err.message });
+            const vehicles = await this.getVehiclesDeauthorized.execute();
+            res.status(200).json(vehicles);
+        } catch (error) {
+            if (error instanceof Error) {
+                res.status(500).json({
+                    error: "Error interno del servidor",
+                    details: error.message
+                });
+            }
         }
     }
 
-    update = async (req: Request, res: Response): Promise<void> => {
+    update = async (req: Request, res: Response) => {
         try {
-        const plate = String(req.params.plate);
-        const dto = plainToInstance(UpdateVehicleDto, req.body);
-        const errors = await validate(dto);
-        if (errors.length > 0) {
-            res.status(400).json({ mensaje: 'Error en la validación', errors });
-            return;
-        }
-        const record = await this.updateVehicle.execute(plate, dto);
-        res.status(200).json(record);
-        } catch (err: any) {
-        res.status(404).json({ message: err.message });
+            const plate = String(req.params.plate);
+            const { error, value } = validateUpdateVehicle(req.body);
+
+            if (error) {
+                res.status(400).json({ mensaje: 'Error en la validación', detail: error.details });
+                return;
+            }
+
+            const record = await this.updateVehicle.execute(plate, value);
+            res.status(200).json(record);
+        } catch (err) {
+            if (err instanceof Error) {
+                res.status(500).json({ error: "Error interno del servidor", details: err.message });
+            }
         }
     }
 }

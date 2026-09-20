@@ -1,4 +1,4 @@
-import { IVehicleRepository } from "../../domain/ports/IVehicle.Repository";
+import { IVehicleRepository } from "../../domain/ports/IVehicle.repository";
 
 export class DeauthorizeVehicleUseCase {
     constructor(private readonly vehicleRepository: IVehicleRepository) {}
