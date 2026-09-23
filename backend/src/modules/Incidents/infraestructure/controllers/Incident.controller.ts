@@ -19,7 +19,7 @@ export class IncidentController {
         private readonly updateIncident: UpdateIncidentUseCase
     ) {}
 
-    createIncident = async (req: Request, res: Response) => {
+    create = async (req: Request, res: Response) => {
         try {
             const { error, value } = validateCreateIncident(req.body);
 
@@ -105,6 +105,11 @@ export class IncidentController {
             res.status(200).json(record);
 
         } catch (error) {
+            if (error instanceof Error && error.message === "No se encontró la incidencia a actualizar") {
+                res.status(404).json({ message: "Incidencia no encontrada" });
+                return;
+            }
+
             if (error instanceof Error) {
                 res.status(500).json({
                     error: "Error interno del servidor",
@@ -114,7 +119,7 @@ export class IncidentController {
         }
     }
 
-    remove = async (req: Request, res: Response) => {
+    delete = async (req: Request, res: Response) => {
         try {
             const id = String(req.params.id);
 
@@ -125,6 +130,11 @@ export class IncidentController {
             });
 
         } catch (error) {
+            if (error instanceof Error && error.message === "No se encontró la incidencia a eliminar") {
+                res.status(404).json({ message: "Incidencia no encontrada" });
+                return;
+            }
+
             if (error instanceof Error) {
                 res.status(500).json({
                     error: "Error interno del servidor",

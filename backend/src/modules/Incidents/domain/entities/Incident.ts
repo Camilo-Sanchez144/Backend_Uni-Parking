@@ -1,9 +1,10 @@
 export class Incident {
     constructor(
-        public readonly fecha_hora: string,
-        public readonly tipo: string,
-        public readonly descripcion: string,
-        public readonly estado: string,
-        public readonly id_usuario: string
+        public id_incidencia: string | undefined,
+        public fecha_hora: Date,
+        public tipo: string,
+        public descripcion: string,
+        public estado: string,
+        public id_usuario: string
     ) {}
 }

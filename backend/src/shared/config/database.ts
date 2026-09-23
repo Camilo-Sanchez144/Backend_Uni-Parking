@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { getRequiredEnv } from "../utils/env";
 import { VehicleEntity } from "../../modules/Vehicle/infraestructure/persistence/Vehicles.Entity";
+import { IncidentEntity } from "../../modules/Incidents/infraestructure/persistence/Incidents.Entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -9,6 +10,6 @@ export const AppDataSource = new DataSource({
   username: getRequiredEnv("DB_USERNAME"),
   password: getRequiredEnv("DB_PASSWORD"),
   database: getRequiredEnv("DB_NAME"),
-  entities: [VehicleEntity],
+  entities: [VehicleEntity, IncidentEntity],
   synchronize: true,
 });

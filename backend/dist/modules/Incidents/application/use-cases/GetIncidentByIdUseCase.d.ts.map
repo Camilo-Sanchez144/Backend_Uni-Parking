@@ -1,0 +1,1 @@
+{"version":3,"file":"GetIncidentByIdUseCase.d.ts","sourceRoot":"","sources":["../../../../../src/modules/Incidents/application/use-cases/GetIncidentByIdUseCase.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,mBAAmB,EAAE,MAAM,yCAAyC,CAAC;AAE9E,qBAAa,sBAAsB;IACnB,OAAO,CAAC,QAAQ,CAAC,kBAAkB;gBAAlB,kBAAkB,EAAE,mBAAmB;IAE9D,OAAO,CAAC,EAAE,EAAE,MAAM;CAG3B"}

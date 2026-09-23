@@ -1,0 +1,1 @@
+{"version":3,"file":"DeleteIncidentUseCase.d.ts","sourceRoot":"","sources":["../../../../../src/modules/Incidents/application/use-cases/DeleteIncidentUseCase.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,mBAAmB,EAAE,MAAM,yCAAyC,CAAC;AAE9E,qBAAa,qBAAqB;IAClB,OAAO,CAAC,QAAQ,CAAC,kBAAkB;gBAAlB,kBAAkB,EAAE,mBAAmB;IAE9D,OAAO,CAAC,EAAE,EAAE,MAAM,GAAG,OAAO,CAAC,IAAI,CAAC;CAG3C"}

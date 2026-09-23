@@ -1,0 +1,1 @@
+{"version":3,"file":"UpdateIncident.dto.d.ts","sourceRoot":"","sources":["../../../../../src/modules/Incidents/application/dto/UpdateIncident.dto.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,iBAAiB;IAC9B,UAAU,CAAC,EAAE,MAAM,CAAC;IACpB,IAAI,CAAC,EAAE,MAAM,CAAC;IACd,WAAW,CAAC,EAAE,MAAM,CAAC;IACrB,MAAM,CAAC,EAAE,MAAM,CAAC;IAChB,UAAU,CAAC,EAAE,MAAM,CAAC;CACvB"}

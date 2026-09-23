@@ -3,11 +3,16 @@ import { Incident } from "../../domain/entities/Incident";
 import { CreateIncidentData } from "../../infraestructure/validations/CreateIncident.validation";
 
 export class AddIncidentUseCase {
-    constructor(private readonly incidentRepository: IIncidentRepository) {}
 
-    async execute(data: CreateIncidentData): Promise<CreateIncidentData> {
+    constructor(
+        private readonly incidentRepository: IIncidentRepository
+    ) {}
+
+    async execute(data: CreateIncidentData): Promise<Incident> {
+
         const incident = new Incident(
-            data.fecha_hora,
+            undefined,
+            new Date(data.fecha_hora),
             data.tipo,
             data.descripcion,
             data.estado,

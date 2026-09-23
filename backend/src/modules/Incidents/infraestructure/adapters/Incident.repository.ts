@@ -84,6 +84,7 @@ export class IncidentRepository implements IIncidentRepository {
 
     private toDomain(entity: IncidentEntity): Incident {
         return new Incident(
+            entity.id_incidencia,
             entity.fecha_hora,
             entity.tipo,
             entity.descripcion,
@@ -96,6 +97,9 @@ export class IncidentRepository implements IIncidentRepository {
 
         const entity = new IncidentEntity();
 
+        if (incident.id_incidencia !== undefined) {
+            entity.id_incidencia = incident.id_incidencia;
+        }
         entity.fecha_hora = incident.fecha_hora;
         entity.tipo = incident.tipo;
         entity.descripcion = incident.descripcion;
