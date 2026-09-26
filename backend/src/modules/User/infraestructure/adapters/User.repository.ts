@@ -32,7 +32,7 @@ export class UserRepository implements IUserRepository{
             where:{ status_user: false }, 
             relations: { vehicles: true }
         });
-        return entities.map((UserEntity)=>this.toDomain(UserEntity));       
+        return entities.map((UserEntity)=>this.toDomain(UserEntity));     
     }
     async restoreUser(id: string): Promise<boolean> {
         const user = await this.dataSource.getRepository(UserEntity).findOneBy({ id_user: id, status_user: false });

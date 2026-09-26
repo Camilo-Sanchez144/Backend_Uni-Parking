@@ -61,10 +61,8 @@ export function validateCreateIncident(data: any): ValidationResult {
             }),
 
         id_usuario: joi.string()
-            .guid({ version: ['uuidv4', 'uuidv5'] })
             .required()
             .messages({
-                'string.guid': 'El ID del usuario debe ser un UUID válido',
                 'string.empty': 'El ID del usuario es obligatorio',
                 'any.required': 'El ID del usuario es un campo requerido',
             }),

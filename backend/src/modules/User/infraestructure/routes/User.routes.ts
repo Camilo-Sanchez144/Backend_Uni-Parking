@@ -10,17 +10,16 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: "Error en la consulta de datos", error });
     }
 });
-
-router.get('/:userId', async (req, res) => {
+router.get('/unactive', async (req, res) => {
     try {
-        await UserControllerInstance.findById(req, res);
+        await UserControllerInstance.getUsersUnactive(req, res);
     } catch (error) {
         res.status(500).json({ message: "Error en la consulta de datos", error });
     }
 });
-router.get('/unactive', async (req, res) => {
+router.get('/:userId', async (req, res) => {
     try {
-        await UserControllerInstance.getUsersUnactive(req, res);
+        await UserControllerInstance.findById(req, res);
     } catch (error) {
         res.status(500).json({ message: "Error en la consulta de datos", error });
     }
@@ -39,7 +38,7 @@ router.put('/:userId', async (req, res) => {
         res.status(500).json({ message: "Error en la consulta de datos", error });
     }
 });
-router.delete('/', async (req, res) => {
+router.delete('/:userId', async (req, res) => {
     try {
         await UserControllerInstance.deleteUserById(req, res);
     } catch (error) {

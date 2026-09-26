@@ -13,7 +13,7 @@ export type DocumentType = (typeof DOCUMENT_TYPES)[number];
  */
 export class Visitor{
     constructor(
-      public readonly id: string,
+      public readonly id: number,
       public readonly first_name: string,
       public readonly last_name: string,
       public readonly document_type: DocumentType,

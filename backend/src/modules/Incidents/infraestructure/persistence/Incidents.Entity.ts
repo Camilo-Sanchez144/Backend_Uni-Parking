@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { UserEntity } from "../../../User/infraestructure/persistence/User.Entity";
 
 @Entity('Incidencia')
 export class IncidentEntity {
 
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryGeneratedColumn()
     id_incidencia!: string;
 
     @Column({ type: "timestamp" })
@@ -18,6 +19,7 @@ export class IncidentEntity {
     @Column({ type: "varchar", length: 50 })
     estado!: string;
 
-    @Column({ type: "uuid" })
-    id_usuario!: string;
+    @ManyToOne(() => UserEntity, (user) => user.incidents)
+    @JoinColumn({ name: "id_owner_incident" }) 
+    owner!: UserEntity;
 }

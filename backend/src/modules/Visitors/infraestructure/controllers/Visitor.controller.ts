@@ -3,7 +3,7 @@ import { CreateVisitor } from "../../application/use-cases/CreateVisitorUseCase"
 import { GetAllVisitors } from "../../application/use-cases/GetAllVisitorsUseCase";
 import { GetVisitor } from "../../application/use-cases/GetVisitorUseCase";
 import { RegisterVisitorExit } from "../../application/use-cases/RegisterVisitorExitUseCase";
-import { validateCreateVisitor, validateVisitorId } from "../validations/Visitor.validation";
+import { validateCreateVisitor } from "../validations/Visitor.validation";
 
 export class VisitorController {
     constructor(
@@ -40,14 +40,12 @@ export class VisitorController {
 
     findById = async (req: Request, res: Response) => {
         try {
-            const { error, value: id } = validateVisitorId(String(req.params.id));
-
-            if (error) {
-                res.status(400).json({ mensaje: 'El id del visitante no es válido' });
+            const userId = Number(req.params.id);
+            if (Number.isNaN(userId)) {
+                res.status(400).json({ mensaje: 'El ID debe ser un número' });
                 return;
             }
-
-            const visitor = await this.getVisitor.execute(id);
+            const visitor = await this.getVisitor.execute(userId);
             if (!visitor) {
                 res.status(404).json({ message: "Visitante no encontrado" });
                 return;
@@ -60,14 +58,12 @@ export class VisitorController {
 
     exit = async (req: Request, res: Response) => {
         try {
-            const { error, value: id } = validateVisitorId(String(req.params.id));
-
-            if (error) {
-                res.status(400).json({ mensaje: 'El id del visitante no es válido' });
+            const userId = Number(req.params.id);
+            if (Number.isNaN(userId)) {
+                res.status(400).json({ mensaje: 'El ID debe ser un número' });
                 return;
             }
-
-            const visitor = await this.registerVisitorExit.execute(id);
+            const visitor = await this.registerVisitorExit.execute(userId);
             if (!visitor) {
                 res.status(404).json({ message: "Visitante no encontrado" });
                 return;

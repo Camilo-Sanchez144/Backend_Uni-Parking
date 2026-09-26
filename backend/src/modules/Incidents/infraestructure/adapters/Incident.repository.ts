@@ -10,7 +10,7 @@ export class IncidentRepository implements IIncidentRepository {
     async getAllIncidents(): Promise<Incident[]> {
         const entities = await this.dataSource
             .getRepository(IncidentEntity)
-            .find();
+            .find({relations: { owner: true }});
 
         return entities.map((incidentEntity) =>
             this.toDomain(incidentEntity)
@@ -20,8 +20,9 @@ export class IncidentRepository implements IIncidentRepository {
     async getIncidentById(id: string): Promise<Incident | null> {
         const entity = await this.dataSource
             .getRepository(IncidentEntity)
-            .findOneBy({
-                id_incidencia: id
+            .findOne({where:{
+                id_incidencia: id},
+                relations: { owner: true }
             });
 
         if (!entity) return null;
@@ -89,7 +90,7 @@ export class IncidentRepository implements IIncidentRepository {
             entity.tipo,
             entity.descripcion,
             entity.estado,
-            entity.id_usuario
+            entity.owner
         );
     }
 
@@ -104,7 +105,7 @@ export class IncidentRepository implements IIncidentRepository {
         entity.tipo = incident.tipo;
         entity.descripcion = incident.descripcion;
         entity.estado = incident.estado;
-        entity.id_usuario = incident.id_usuario;
+        entity.owner = incident.owner;
 
         return entity;
     }

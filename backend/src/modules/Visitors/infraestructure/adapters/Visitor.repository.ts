@@ -13,7 +13,7 @@ export class VisitorRepository implements VisitorPort{
         const saved = await this.dataSource.getRepository(VisitorEntity).save(entity);
         return this.toDomain(saved);
     }
-    async findById(id: string): Promise<Visitor | null> {
+    async findById(id: number): Promise<Visitor | null> {
         const model = await this.dataSource.getRepository(VisitorEntity).findOne({where:{id_visitor:id}});
         if(!model) return null;
         return this.toDomain(model);
@@ -22,7 +22,7 @@ export class VisitorRepository implements VisitorPort{
         const models = await this.dataSource.getRepository(VisitorEntity).find();
         return models.map((model)=>this.toDomain(model));
     }
-    async registerExit(id: string): Promise<Visitor | null> {
+    async registerExit(id: number): Promise<Visitor | null> {
         const result = await this.dataSource.getRepository(VisitorEntity).update({id_visitor:id}, {exited_at_visitor: new Date()});
         if(!result.affected) return null;
         return this.findById(id);
@@ -56,6 +56,7 @@ export class VisitorRepository implements VisitorPort{
         model.reason_visitor = visitor.reason;
         model.plate_vehicle_visitor = visitor.plate_vehicle_visitor;
         model.brand_vehicle = visitor.brand_vehicle;
+        model.model_vehicle = visitor.model_vehicle;
         model.color_vehicle = visitor.color_vehicle;
         model.type_vehicle = visitor.type_vehicle;
         model.created_at_visitor = visitor.created_at;

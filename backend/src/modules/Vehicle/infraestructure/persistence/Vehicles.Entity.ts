@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { UserEntity } from "../../../User/infraestructure/persistence/User.Entity";
 
 @Entity('Vehicle')
@@ -25,4 +25,5 @@ export class VehicleEntity{
     @ManyToOne(() => UserEntity, (user) => user.vehicles)
     @JoinColumn({ name: "id_owner_vehicle" }) 
     owner!: UserEntity;
+
 }

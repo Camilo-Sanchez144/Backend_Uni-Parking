@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { VehicleEntity } from "../../../Vehicle/infraestructure/persistence/Vehicles.Entity";
+import { IncidentEntity } from "../../../Incidents/infraestructure/persistence/Incidents.Entity";
 
 @Entity('User')
 export class UserEntity{
@@ -18,6 +19,9 @@ export class UserEntity{
     @OneToMany(() => VehicleEntity, (vehicle) => vehicle.owner)
     vehicles!: VehicleEntity[];
 
-    @Column()
+    @OneToMany(()=> IncidentEntity, (incident) => incident.owner)
+    incidents!:IncidentEntity[];
+
+    @Column({type:'boolean'})
     status_user!:boolean;
 }

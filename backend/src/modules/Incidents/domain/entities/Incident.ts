@@ -1,3 +1,5 @@
+import { UserEntity } from "../../../User/infraestructure/persistence/User.Entity";
+
 export class Incident {
     constructor(
         public id_incidencia: string | undefined,
@@ -5,6 +7,6 @@ export class Incident {
         public tipo: string,
         public descripcion: string,
         public estado: string,
-        public id_usuario: string
+        public owner: UserEntity
     ) {}
 }

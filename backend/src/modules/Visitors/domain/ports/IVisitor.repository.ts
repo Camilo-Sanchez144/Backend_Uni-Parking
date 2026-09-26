@@ -6,7 +6,7 @@ export interface VisitorPort{
      * existe, se reutiliza en vez de crear otro. Devuelve el visitante con el vehículo definitivo.
      */
     register(visitor: Visitor): Promise<Visitor>;
-    findById(id: string): Promise<Visitor | null>;
+    findById(id: number): Promise<Visitor | null>;
     /** Del más reciente al más antiguo. */
     findAll(): Promise<Visitor[]>;
     /**
@@ -14,5 +14,5 @@ export interface VisitorPort{
      * `is_authorized` sea true: esa regla la aplica quien use el puerto (4.6 de
      * planeacion-desarrollo.md deja esa decisión en la capa de presentación).
      */
-    registerExit(id: string): Promise<Visitor | null>;
+    registerExit(id: number): Promise<Visitor | null>;
 }
