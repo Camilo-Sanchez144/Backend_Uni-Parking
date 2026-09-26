@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import { Vehicle } from "../../domain/entities/Vehicle";
 import { IVehicleRepository } from "../../domain/ports/IVehicle.repository";
 import { VehicleEntity } from "../persistence/Vehicles.Entity";
+import { toVehicleDomain, toVehicleEntity } from "../../../../shared/utils/mapperVehicle";
 
 export class VehicleRepository implements IVehicleRepository{
 
@@ -48,27 +49,11 @@ export class VehicleRepository implements IVehicleRepository{
         return; 
     }
     private toDomain(entity: VehicleEntity): Vehicle {
-        return new Vehicle(
-        entity.plate_vehicle,
-        entity.brand_vehicle,
-        entity.model_vehicle,
-        entity.color_vehicle,
-        entity.type_vehicle,
-        entity.is_authorized_vehicle,
-        entity.id_owner_vehicle
-        );
+        return toVehicleDomain(entity);
     }
 
     private toEntity(vehicle: Vehicle): VehicleEntity {
-        const entity = new VehicleEntity();
-        entity.plate_vehicle = vehicle.plate;
-        entity.brand_vehicle = vehicle.brand;
-        entity.model_vehicle = vehicle.model;
-        entity.color_vehicle = vehicle.color;
-        entity.type_vehicle = vehicle.type;
-        entity.is_authorized_vehicle = vehicle.is_authorized;
-        entity.id_owner_vehicle = vehicle.id_owner;
-        return entity;
+        return toVehicleEntity(vehicle);
     }
     
 }

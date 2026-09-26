@@ -1,0 +1,1 @@
+{"version":3,"file":"Role.entity.d.ts","sourceRoot":"","sources":["../../../../../src/modules/Role/infraestructure/persistence/Role.entity.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,oBAAoB,EAAE,MAAM,yBAAyB,CAAC;AAE/D,qBACa,UAAU;IAErB,OAAO,EAAG,MAAM,CAAC;IAGjB,SAAS,EAAG,MAAM,CAAC;IAGnB,gBAAgB,EAAG,MAAM,CAAC;IAG1B,eAAe,EAAG,oBAAoB,EAAE,CAAC;CAC1C"}

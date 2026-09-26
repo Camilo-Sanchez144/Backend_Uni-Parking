@@ -1,26 +1,28 @@
-import { Entity, PrimaryColumn, Column } from "typeorm";
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { UserEntity } from "../../../User/infraestructure/persistence/User.Entity";
 
 @Entity('Vehicle')
 export class VehicleEntity{
 
-    @PrimaryColumn({type:"varchar", length: 50})
+    @PrimaryColumn({type:"varchar"})
     plate_vehicle!:string;
 
-    @Column({type:"varchar", length: 50})
+    @Column({type:"varchar"})
     brand_vehicle!:string;
 
-    @Column({type:"integer", length: 50})
+    @Column({type:"integer"})
     model_vehicle!:number;
 
-    @Column({type:"varchar", length: 50})
+    @Column({type:"varchar"})
     color_vehicle!: string;
 
-    @Column({type:"varchar", length: 50})
+    @Column({type:"varchar"})
     type_vehicle!:string;
 
-    @Column({type:"boolean", length: 50})
+    @Column({type:"boolean"})
     is_authorized_vehicle!:boolean;
 
-    @Column({type:"varchar", length: 50})
-    id_owner_vehicle!:number;
+    @ManyToOne(() => UserEntity, (user) => user.vehicles)
+    @JoinColumn({ name: "id_owner_vehicle" }) 
+    owner!: UserEntity;
 }

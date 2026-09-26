@@ -1,4 +1,3 @@
-// infrastructure/controllers/Vehicle.controller.instance.ts
 import { AppDataSource } from "../../../../shared/config/database";
 import { VehicleRepository } from "../adapters/Vehicle.repository";
 import { AddVehicleUseCase } from "../../application/use-cases/AddVehicleUseCase";
