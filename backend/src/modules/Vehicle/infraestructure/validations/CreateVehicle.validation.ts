@@ -1,12 +1,15 @@
 import * as joi from 'joi';
 
+import { UserEntity } from '../../../User/infraestructure/persistence/User.Entity';
+import { UUID } from 'crypto';
+
 export type CreateVehicleData = {
-  plate: string;
+  plate?:string | UUID;
   brand: string;
   model: number;
   color: string;
   type: string;
-  id_owner: number;
+  owner: UserEntity;
 };
 
 type ValidationResult = {
@@ -15,12 +18,10 @@ type ValidationResult = {
 };
 
 export const vehicleDataSchema = joi.object({
+
   plate: joi.string()
-    .required()
     .messages({
-      'string.pattern.base': 'La placa debe tener el formato ABC123 (3 letras y 3 números)',
       'string.empty': 'La placa es obligatoria',
-      'any.required': 'La placa es un campo requerido',
     }),
 
   brand: joi.string()
@@ -58,13 +59,14 @@ export const vehicleDataSchema = joi.object({
       'string.empty': 'El tipo de vehículo es obligatorio',
     }),
 
-  id_owner: joi.number()
+  owner: joi.string()
     .required()
     .messages({
       'string.empty': 'El propietario es obligatorio',
       'any.required': 'El propietario es un campo requerido',
     }),
 });
+
 
 export function validateCreateVehicle(data: any): ValidationResult {
   return vehicleDataSchema.validate(data);

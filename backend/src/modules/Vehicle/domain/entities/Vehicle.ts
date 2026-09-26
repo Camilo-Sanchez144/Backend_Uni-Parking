@@ -1,3 +1,6 @@
+import { User } from "../../../User/domain/entities/User";
+import { UserEntity } from "../../../User/infraestructure/persistence/User.Entity";
+
 export class Vehicle{
     constructor(
       public readonly plate: string,
@@ -6,6 +9,6 @@ export class Vehicle{
       public readonly color: string,
       public readonly type: string,
       public is_authorized: boolean,
-      public readonly id_owner: number,
+      public readonly owner: UserEntity,
   ) {}
 }

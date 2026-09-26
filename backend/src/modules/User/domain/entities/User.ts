@@ -6,7 +6,7 @@ export class User{
         public readonly name: string,
         public readonly email: string,
         public readonly roleId: number,
-        public readonly vehicles: string[],
+        public readonly vehicles: Vehicle[],
         public status_user = true
     ) {}
 }

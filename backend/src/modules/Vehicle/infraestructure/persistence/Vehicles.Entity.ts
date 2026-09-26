@@ -4,7 +4,7 @@ import { UserEntity } from "../../../User/infraestructure/persistence/User.Entit
 @Entity('Vehicle')
 export class VehicleEntity{
 
-    @PrimaryColumn({type:"varchar"})
+    @PrimaryColumn({type:"varchar", unique:true})
     plate_vehicle!:string;
 
     @Column({type:"varchar"})

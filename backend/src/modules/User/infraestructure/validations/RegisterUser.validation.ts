@@ -1,7 +1,9 @@
 import * as joi from 'joi';
 
 export type RegisterUserData = {
+  id:string;
   name: string;
+  email: string;
 };
 
 type ValidationResult = {
@@ -11,6 +13,7 @@ type ValidationResult = {
 
 export function validateRegisterUser(data: any): ValidationResult {
   const schema = joi.object({
+    id: joi.string(),
     name: joi.string()
       .trim()
       .min(2)
@@ -22,6 +25,7 @@ export function validateRegisterUser(data: any): ValidationResult {
         'string.empty': 'El nombre es obligatorio',
         'string.min': 'El nombre debe tener al menos 2 caracteres',
       }),
+    email: joi.string()
   });
 
   return schema.validate(data);

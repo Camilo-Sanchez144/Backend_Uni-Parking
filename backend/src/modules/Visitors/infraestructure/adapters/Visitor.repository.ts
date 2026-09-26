@@ -2,8 +2,6 @@ import { DataSource, Repository } from "typeorm";
 import { Visitor, DocumentType } from "../../domain/entities/Visitor";
 import { VisitorPort } from "../../domain/ports/IVisitor.repository";
 import { Vehicle } from "../../../Vehicle/domain/entities/Vehicle";
-import { VehicleEntity } from "../../../Vehicle/infraestructure/persistence/Vehicles.Entity";
-import { toVehicleDomain, toVehicleEntity } from "../../../../shared/utils/mapperVehicle";
 import { VisitorEntity } from "../persistence/Visitor.Entity";
 
 export class VisitorRepository implements VisitorPort{
@@ -28,17 +26,6 @@ export class VisitorRepository implements VisitorPort{
         const result = await this.dataSource.getRepository(VisitorEntity).update({id_visitor:id}, {exited_at_visitor: new Date()});
         if(!result.affected) return null;
         return this.findById(id);
-    }
-
-    private async saveVehicle(vehicles: Repository<VehicleEntity>, vehicle: Vehicle): Promise<VehicleEntity> {
-        const entity = toVehicleEntity(vehicle);
-        // Sin placa (scooter, bicicleta) cada registro es un vehículo nuevo.
-        if(!entity.plate_vehicle) return vehicles.save(entity);
-        // La placa identifica al vehículo: si la moto ya existe (otra visita, o un usuario de la
-        // universidad) se reutiliza. ON CONFLICT DO NOTHING evita el choque entre dos registros
-        // simultáneos con la misma placa.
-        await vehicles.createQueryBuilder().insert().values(entity).orIgnore().execute();
-        return vehicles.findOneByOrFail({plate_vehicle:entity.plate_vehicle});
     }
 
     private toDomain(model: VisitorEntity): Visitor {
