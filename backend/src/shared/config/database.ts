@@ -6,6 +6,7 @@ import { PermissionEntity } from "../../modules/Role/infraestructure/persistence
 import { RolePermissionEntity } from "../../modules/Role/infraestructure/persistence/RolePermission.Entity";
 import { UserEntity } from "../../modules/User/infraestructure/persistence/User.Entity";
 import { VisitorEntity } from "../../modules/Visitors/infraestructure/persistence/Visitor.Entity";
+import { IncidentEntity } from "../../modules/Incidents/infraestructure/persistence/Incidents.Entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -14,6 +15,6 @@ export const AppDataSource = new DataSource({
   username: getRequiredEnv("DB_USERNAME"),
   password: getRequiredEnv("DB_PASSWORD"),
   database: getRequiredEnv("DB_NAME"),
-  entities: [VehicleEntity, RoleEntity, PermissionEntity, RolePermissionEntity, UserEntity, VisitorEntity],
+  entities: [VehicleEntity, RoleEntity, PermissionEntity, RolePermissionEntity, UserEntity, VisitorEntity, IncidentEntity],
   synchronize: true,
 });
