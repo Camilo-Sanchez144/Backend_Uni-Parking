@@ -1,5 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
-
+import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
+@Index(
+    "idx_unique_open_access_by_plate",
+    ["plate_access_record"],
+    { unique: true, where: `"exit_date_time_access_record" IS NULL AND "plate_access_record" IS NOT NULL`}
+)
 @Entity('Access_Record')
 export class AccessRecordEntity{
 
