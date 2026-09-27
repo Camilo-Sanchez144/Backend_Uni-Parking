@@ -22,8 +22,10 @@ export class VehicleEntity{
     @Column({type:"boolean"})
     is_authorized_vehicle!:boolean;
 
+    @Column({ type: "varchar", length: 128 })
+    id_owner_vehicle!: string;
+
     @ManyToOne(() => UserEntity, (user) => user.vehicles)
     @JoinColumn({ name: "id_owner_vehicle" }) 
     owner!: UserEntity;
-
 }

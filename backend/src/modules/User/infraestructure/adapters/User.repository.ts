@@ -59,7 +59,7 @@ export class UserRepository implements IUserRepository{
                 vehicle.color_vehicle,
                 vehicle.type_vehicle,
                 vehicle.is_authorized_vehicle,
-                entity
+                entity.id_user
             ))
             : [];
 

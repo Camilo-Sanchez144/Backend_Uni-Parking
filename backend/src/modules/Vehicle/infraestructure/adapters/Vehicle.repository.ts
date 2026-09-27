@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import { Vehicle } from "../../domain/entities/Vehicle";
 import { IVehicleRepository } from "../../domain/ports/IVehicle.repository";
 import { VehicleEntity } from "../persistence/Vehicles.Entity";
+import { User } from "../../../User/domain/entities/User";
 
 export class VehicleRepository implements IVehicleRepository{
 
@@ -60,26 +61,38 @@ export class VehicleRepository implements IVehicleRepository{
         return; 
     }
     private toDomain(entity: VehicleEntity): Vehicle {
-        return new Vehicle(
+    const ownerDomain = entity.owner
+        ? new User(
+            entity.owner.id_user,
+            entity.owner.name_user,
+            entity.owner.email_user,
+            entity.owner.role_id_user,
+            [], // vacío a propósito, para no reintroducir la cascada
+            entity.owner.status_user
+        )
+        : undefined;
+
+    return new Vehicle(
         entity.plate_vehicle,
         entity.brand_vehicle,
         entity.model_vehicle,
         entity.color_vehicle,
         entity.type_vehicle,
         entity.is_authorized_vehicle,
-        entity.owner
-        );
-    }
+        entity.id_owner_vehicle, // ← el string, siempre presente
+        ownerDomain              // ← el objeto User, solo si la relación fue cargada
+    );
+}
 
-    private toEntity(vehicle: Vehicle): VehicleEntity {
-        const entity = new VehicleEntity();
-        entity.plate_vehicle = vehicle.plate;
-        entity.brand_vehicle = vehicle.brand;
-        entity.model_vehicle = vehicle.model;
-        entity.color_vehicle = vehicle.color;
-        entity.type_vehicle = vehicle.type;
-        entity.is_authorized_vehicle = vehicle.is_authorized;
-        entity.owner = vehicle.owner;
-        return entity;
-    }
+private toEntity(vehicle: Vehicle): VehicleEntity {
+    const entity = new VehicleEntity();
+    entity.plate_vehicle = vehicle.plate;
+    entity.brand_vehicle = vehicle.brand;
+    entity.model_vehicle = vehicle.model;
+    entity.color_vehicle = vehicle.color;
+    entity.type_vehicle = vehicle.type;
+    entity.is_authorized_vehicle = vehicle.is_authorized;
+    entity.id_owner_vehicle = vehicle.id_owner; // ← solo el string, TypeORM arma la FK con esto
+    return entity;
+}
 }
