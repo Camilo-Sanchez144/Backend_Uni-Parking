@@ -1,8 +1,4 @@
 import { Request, Response } from "express";
-import { plainToInstance } from "class-transformer";
-import { validate } from "class-validator";
-import { CreateVehicleDto } from "../../application/dto/Vehicle.dto";
-import { UpdateVehicleDto } from "../../application/dto/UpdateVehicle.dto";
 import { AddVehicleUseCase } from "../../application/use-cases/AddVehicleUseCase";
 import { AuthorizeVehicleUseCase } from "../../application/use-cases/AuthorizeVehicleUseCase";
 import { DeauthorizeVehicleUseCase } from "../../application/use-cases/DeauthorizeVehicleUseCase";
@@ -27,12 +23,13 @@ export class VehicleController {
     createVehicle = async (req: Request, res: Response) => {
         try {
             const { error, value } = validateCreateVehicle(req.body);
-
             if (error) {
-                res.status(400).json({ mensaje: 'Error en la validación', detail: error.details });
+                res.status(400).json({
+                    mensaje: 'Error en la validación',
+                    detail: error.details
+                });
                 return;
             }
-
             const record = await this.addVehicle.execute(value);
             res.status(201).json(record);
         } catch (err) {

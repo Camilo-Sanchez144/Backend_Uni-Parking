@@ -1,0 +1,1 @@
+{"version":3,"file":"mapperVehicle.d.ts","sourceRoot":"","sources":["../../../src/shared/utils/mapperVehicle.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,mEAAmE,CAAC;AAClG,OAAO,EAAE,OAAO,EAAE,MAAM,+CAA+C,CAAC;AAExE,wBAAgB,eAAe,CAAC,MAAM,EAAE,aAAa,GAAG,OAAO,CAU1D;AAEL,wBAAgB,eAAe,CAAC,OAAO,EAAE,OAAO,GAAG,aAAa,CAU3D"}
