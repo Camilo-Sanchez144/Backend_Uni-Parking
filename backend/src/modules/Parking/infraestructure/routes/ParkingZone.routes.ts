@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import AccessRecordControllerInstance from '../controllers/AccessRecord.controller.instance';
-
+import parkingZoneControllerIntance from '../controllers/ParkingZone.controller.instance';
 const router = Router();
 
-router.post('/entry/:plate', async (req, res) => {
+router.post('/', async (req, res) => {
         try {
-            await AccessRecordControllerInstance.registerEntryVehicle(req, res);
+            await parkingZoneControllerIntance.createParkingZone(req, res);
         } catch (error) {
             res.status(500).json({
                 message: "Error en la ruta de ingreso"
@@ -14,9 +13,9 @@ router.post('/entry/:plate', async (req, res) => {
     }
 );
 
-router.patch('/exit/:plate', async (req, res) => {
+router.get('/', async (req, res) => {
         try {
-            await AccessRecordControllerInstance.registerExitVehicle(req, res);
+            await parkingZoneControllerIntance.getAllParkingZone(req, res);
         } catch (error) {
             res.status(500).json({
                 message: "Error en la ruta de salida"
@@ -24,9 +23,9 @@ router.patch('/exit/:plate', async (req, res) => {
         }
     }
 );
-router.post('/entry/visitor/:visitorId', async (req, res) => {
+router.patch('/:idParkingZone', async (req, res) => {
         try {
-            await AccessRecordControllerInstance.registerEntryVisitor(req, res);
+            await parkingZoneControllerIntance.updateParkingZone(req, res);
         } catch (error) {
             res.status(500).json({
                 message: "Error en la ruta de ingreso"
@@ -35,9 +34,9 @@ router.post('/entry/visitor/:visitorId', async (req, res) => {
     }
 );
 
-router.patch('/exit/visitor/:visitorId', async (req, res) => {
+router.get('/:typeVehicle', async (req, res) => {
         try {
-            await AccessRecordControllerInstance.registerExitVisitor(req, res);
+            await parkingZoneControllerIntance.findParkingZoneByVehicleType(req, res);
         } catch (error) {
             res.status(500).json({
                 message: "Error en la ruta de salida"

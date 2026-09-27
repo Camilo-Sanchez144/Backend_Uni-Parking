@@ -1,20 +1,20 @@
 import { IAccessRecordRepository } from "../../domain/ports/IAccessRecord.repository";
 import { IParkingZoneRepository } from "../../domain/ports/IParkingZone.repository";
 
-export class RegisterExitUseCase {
+export class RegisterExitVisitorUseCase {
 
     constructor(
         private accessRecordRepository: IAccessRecordRepository,
         private parkingZoneRepository: IParkingZoneRepository
     ) {}
 
-    async execute(plate: string) {
+    async execute(visitorId: number) {
 
-        const record = await this.accessRecordRepository.findOpenRecordByPlate(plate);
+        const record = await this.accessRecordRepository.findOpenRecordByVisitorId(visitorId);
 
         if (!record) {
             throw new Error(
-                "El vehículo no se encuentra dentro del parqueadero"
+                "El visitante no se encuentra dentro del parqueadero"
             );
         }
         record.registerExit();
@@ -24,10 +24,7 @@ export class RegisterExitUseCase {
             throw new Error("Zona no encontrada");
         }
         zone.releaseSpace();
-        if (zone.id === undefined) {
-            throw new Error('No se puede actualizar una zona de parqueo sin id');
-        }
-        await this.parkingZoneRepository.updateParkingZone(zone.id,zone);
+        await this.parkingZoneRepository.updateParkingZone(zone.id, zone);
         await this.accessRecordRepository.updateAccessRecord(record);
 
         return record;

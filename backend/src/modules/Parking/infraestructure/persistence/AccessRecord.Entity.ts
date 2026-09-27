@@ -1,8 +1,10 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index } from "typeorm";
 @Index(
-    "idx_unique_open_access_by_plate",
-    ["plate_access_record"],
+    "idx_unique_open_access_by_plate",["plate_access_record"],
     { unique: true, where: `"exit_date_time_access_record" IS NULL AND "plate_access_record" IS NOT NULL`}
+)
+@Index("idx_unique_open_access_by_visitor", ["visitor_id_access_record"],
+    { unique: true, where: `"exit_date_time_access_record" IS NULL AND "visitor_id_access_record" IS NOT NULL`}
 )
 @Entity('Access_Record')
 export class AccessRecordEntity{
@@ -13,7 +15,7 @@ export class AccessRecordEntity{
     @Column({ type: "varchar", nullable: true })
     plate_access_record!: string | null;
 
-    @Column({ type: "integer", nullable: true })
+    @Column({ type: "int", nullable: true })
     visitor_id_access_record!: number | null;
 
     @Column({ type: "varchar" })

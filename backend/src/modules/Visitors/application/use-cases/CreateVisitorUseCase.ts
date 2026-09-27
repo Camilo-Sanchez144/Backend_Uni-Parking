@@ -1,10 +1,10 @@
-import { VisitorPort } from "../../domain/ports/IVisitor.repository";
+import { IVisitorRepository } from "../../domain/ports/IVisitor.repository";
 import { Visitor } from "../../domain/entities/Visitor";
 import { CreateVisitorDto } from "../dto/CreateVisitor.dto";
 
 export class CreateVisitor {
 
-    constructor(private readonly visitorRepository: VisitorPort) {}
+    constructor(private readonly visitorRepository: IVisitorRepository) {}
 
     async execute(data: CreateVisitorDto): Promise<Visitor> {
 
