@@ -7,6 +7,8 @@ import { RolePermissionEntity } from "../../modules/Role/infraestructure/persist
 import { UserEntity } from "../../modules/User/infraestructure/persistence/User.Entity";
 import { VisitorEntity } from "../../modules/Visitors/infraestructure/persistence/Visitor.Entity";
 import { IncidentEntity } from "../../modules/Incidents/infraestructure/persistence/Incidents.Entity";
+import { AccessRecordEntity } from "../../modules/Parking/infraestructure/persistence/AccessRecord.Entity";
+import { ParkingZoneEntity } from "../../modules/Parking/infraestructure/persistence/ParkingZone.Entity";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -15,6 +17,6 @@ export const AppDataSource = new DataSource({
   username: getRequiredEnv("DB_USERNAME"),
   password: getRequiredEnv("DB_PASSWORD"),
   database: getRequiredEnv("DB_NAME"),
-  entities: [VehicleEntity, RoleEntity, PermissionEntity, RolePermissionEntity, UserEntity, VisitorEntity, IncidentEntity],
+  entities: [VehicleEntity, RoleEntity, PermissionEntity, RolePermissionEntity, UserEntity, VisitorEntity, IncidentEntity, AccessRecordEntity, ParkingZoneEntity],
   synchronize: true,
 });
