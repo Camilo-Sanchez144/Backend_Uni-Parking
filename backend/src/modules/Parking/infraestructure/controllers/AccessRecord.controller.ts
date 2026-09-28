@@ -1,4 +1,3 @@
-import { GetStatusVehicleUseCase } from './../../application/use-cases/GetStatusVehicleUseCase';
 import { GethistoricalByPlateUseCase } from './../../application/use-cases/GethistoricalByPlateUseCase';
 import { Request, Response } from "express";
 import { GetOpenAccessRecordsUseCase } from "../../application/use-cases/GetOpenAccessRecordsUseCase";
@@ -6,6 +5,7 @@ import { RegisterEntryUseCase } from "../../application/use-cases/RegisterEntryU
 import { RegisterEntryVisitorUseCase } from "../../application/use-cases/RegisterEntryVisitorUseCase";
 import { RegisterExitUseCase } from "../../application/use-cases/RegisterExitUseCase";
 import { RegisterExitVisitorUseCase } from "../../application/use-cases/RegisterExitVisitorUseCase";
+import { GetVehicleStatusUseCase } from '../../application/use-cases/GetStatusVehicleUseCase';
 
 export class AccessRecordController {
 
@@ -16,7 +16,7 @@ export class AccessRecordController {
         private readonly registerExitVisitorVehicle: RegisterExitVisitorUseCase,
         private readonly getOpenAccessRecords: GetOpenAccessRecordsUseCase,
         private readonly gethistoricalByPlate: GethistoricalByPlateUseCase,
-        private readonly getStatusVehicle: GetStatusVehicleUseCase
+        private readonly getStatusVehicle: GetVehicleStatusUseCase
     ){}
 
     findOpenRecords = async (req: Request, res: Response) => {
@@ -47,8 +47,8 @@ export class AccessRecordController {
     getVehicleStatus = async (req: Request, res: Response) => {
         try {
             const plate = String(req.params.plate)
-            const isInside = await this.getStatusVehicle.execute(plate);
-            res.status(200).json({ plate: req.params.plate, isInside });
+            const status = await this.getStatusVehicle.execute(plate);
+            res.status(200).json(status);
         } catch (err) {
             if (err instanceof Error) {
                 res.status(500).json({ error: "Error al consultar el estado del vehículo", details: err.message });

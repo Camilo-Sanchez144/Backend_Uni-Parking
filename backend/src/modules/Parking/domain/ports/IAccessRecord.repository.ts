@@ -4,8 +4,8 @@ import { AccessRecord } from "../entities/AccessRecord";
 export interface IAccessRecordRepository{
 
     getAllAccessRecord(): Promise<AccessRecord[]>;
-    gethistoricalByPlate(plate:string): Promise<AccessRecord[]>; 
     saveAccessRecord(accessRecord: AccessRecord): Promise<AccessRecord>;
+    getLatestRecordByPlate(plate: string): Promise<AccessRecord | null>;
     /** Guarda la salida solo si el registro seguía abierto; false si ya estaba cerrado. */
     closeAccessRecord(accessRecord: AccessRecord): Promise<boolean>;
     findOpenRecordByPlate(plate: string): Promise<AccessRecord | null>;

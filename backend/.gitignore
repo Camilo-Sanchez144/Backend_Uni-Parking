@@ -1,11 +1,17 @@
 **/node_modules/
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 47907f36f87440a4999f0c358a479e77033d7fff
 **/dist/
 <<<<<<< HEAD
 /docs
 =======
 **.env
+<<<<<<< HEAD
 >>>>>>> camilo-dev
 =======
 **/dist/
 >>>>>>> master
+=======
+>>>>>>> 47907f36f87440a4999f0c358a479e77033d7fff
