@@ -18,5 +18,6 @@ export const AppDataSource = new DataSource({
   password: getRequiredEnv("DB_PASSWORD"),
   database: getRequiredEnv("DB_NAME"),
   entities: [VehicleEntity, RoleEntity, PermissionEntity, RolePermissionEntity, UserEntity, VisitorEntity, IncidentEntity, AccessRecordEntity, ParkingZoneEntity],
-  synchronize: true,
+  // En producción no se toca el esquema solo: ahí los cambios de tablas van con migraciones.
+  synchronize: process.env.NODE_ENV !== "production",
 });

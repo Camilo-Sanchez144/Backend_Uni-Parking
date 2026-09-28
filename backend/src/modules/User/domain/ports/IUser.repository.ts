@@ -3,6 +3,7 @@ import { User } from "../entities/User";
 export interface IUserRepository{
     addUser(user:User):Promise<User>;
     getUserById(id:string):Promise<User | null>;
+    getUserByIdIncludingInactive(id:string):Promise<User | null>;
     getAllUsers():Promise<User[]>;
     getAllUserUnactive():Promise<User[]>;
     restoreUser(id:string):Promise<boolean>;

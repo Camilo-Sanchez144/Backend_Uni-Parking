@@ -7,4 +7,8 @@ export class GetUserByIdUseCase {
   async execute(id:string): Promise<User | null> {
     return this.userRepository.getUserById(id);
   }
+
+  async executeIncludingInactive(id:string): Promise<User | null> {
+    return this.userRepository.getUserByIdIncludingInactive(id);
+  }
 }

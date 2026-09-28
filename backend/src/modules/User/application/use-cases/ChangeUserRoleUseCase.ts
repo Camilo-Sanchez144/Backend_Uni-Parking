@@ -48,8 +48,7 @@ export class ChangeUserRoleUseCase {
       throw new ChangeUserRoleError(`El rol ${roleId} no existe`, 400);
     }
 
-    // role_id_user es varchar en la base de datos: llega como texto.
-    const currentRoleId = Number(user.roleId);
+    const currentRoleId = user.roleId;
     const isSuperadmin = requesterRoleId === ROLE_IDS.SUPERADMIN;
     if (!isSuperadmin && (currentRoleId >= requesterRoleId || roleId >= requesterRoleId)) {
       throw new ChangeUserRoleError("No puedes asignar ese rol ni cambiar el rol de ese usuario", 403);
