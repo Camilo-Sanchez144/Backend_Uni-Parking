@@ -11,6 +11,18 @@ export class AccessRecordRepository implements IAccessRecordRepository{
         const entities = await this.dataSource.getRepository(AccessRecordEntity).find();
         return entities.map(entity =>this.toDomain(entity)); 
     }
+    async gethistoricalByPlate(plate:string): Promise<AccessRecord[]> {
+        const entities = await this.dataSource.getRepository(AccessRecordEntity).find({where: {plate_access_record:plate}});
+        return entities.map(entity =>this.toDomain(entity)); 
+    }
+    async getStatusVehicle(plate: string): Promise<boolean> {
+        const entity = await this.dataSource.getRepository(AccessRecordEntity).findOne({
+            where: { plate_access_record: plate },
+            order: { entry_date_time_access_record: "DESC" }, 
+        });
+        if (!entity) return false;
+        return this.toDomain(entity).isCurrentlyInside();
+    }
     async saveAccessRecord(accessRecord: AccessRecord): Promise<AccessRecord> {
         const entity = this.toEntity(accessRecord);
         const saved = await this.dataSource.getRepository(AccessRecordEntity).save(entity);
