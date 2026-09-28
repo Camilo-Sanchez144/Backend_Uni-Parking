@@ -15,13 +15,12 @@ export class AccessRecordRepository implements IAccessRecordRepository{
         const entities = await this.dataSource.getRepository(AccessRecordEntity).find({where: {plate_access_record:plate}});
         return entities.map(entity =>this.toDomain(entity)); 
     }
-    async getStatusVehicle(plate: string): Promise<boolean> {
+    async getLatestRecordByPlate(plate: string): Promise<AccessRecord | null> {
         const entity = await this.dataSource.getRepository(AccessRecordEntity).findOne({
             where: { plate_access_record: plate },
-            order: { entry_date_time_access_record: "DESC" }, 
+            order: { entry_date_time_access_record: "DESC" },
         });
-        if (!entity) return false;
-        return this.toDomain(entity).isCurrentlyInside();
+        return entity ? this.toDomain(entity) : null;
     }
     async saveAccessRecord(accessRecord: AccessRecord): Promise<AccessRecord> {
         const entity = this.toEntity(accessRecord);
