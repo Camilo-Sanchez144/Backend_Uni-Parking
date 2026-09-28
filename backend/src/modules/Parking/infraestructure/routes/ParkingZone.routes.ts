@@ -1,4 +1,6 @@
+import { validatePermission } from './../../../../shared/middleware/authorize';
 import { Router } from 'express';
+import { authorize } from '../../../../shared/middleware/authorize';
 import parkingZoneControllerIntance from '../controllers/ParkingZone.controller.instance';
 const router = Router();
 
@@ -12,7 +14,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', authorize(validatePermission, 'vehicle:status'), async (req, res) => {
     try {
         await parkingZoneControllerIntance.getAllParkingZone(req, res);
     } catch (error) {
