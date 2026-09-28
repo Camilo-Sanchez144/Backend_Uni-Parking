@@ -23,12 +23,17 @@ export class RegisterExitUseCase {
         if (!zone) {
             throw new Error("Zona no encontrada");
         }
-        zone.releaseSpace();
         if (zone.id === undefined) {
             throw new Error('No se puede actualizar una zona de parqueo sin id');
         }
-        await this.parkingZoneRepository.updateParkingZone(zone.id,zone);
-        await this.accessRecordRepository.updateAccessRecord(record);
+        // Primero se cierra el registro, y solo si seguía abierto: si otra salida del
+        // mismo vehículo se adelantó, no se libera el puesto dos veces.
+        if (!(await this.accessRecordRepository.closeAccessRecord(record))) {
+            throw new Error(
+                "El vehículo no se encuentra dentro del parqueadero"
+            );
+        }
+        await this.parkingZoneRepository.releaseSpace(zone.id);
 
         return record;
     }

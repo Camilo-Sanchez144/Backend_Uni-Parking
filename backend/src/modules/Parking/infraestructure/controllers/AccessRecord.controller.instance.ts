@@ -8,6 +8,7 @@ import { ParkingZoneRepository } from '../adapters/ParkingZone.repository';
 import { RegisterEntryVisitorUseCase } from '../../application/use-cases/RegisterEntryVisitorUseCase';
 import { RegisterExitVisitorUseCase } from '../../application/use-cases/RegisterExitVisitorUseCase';
 import { VisitorRepository } from '../../../Visitors/infraestructure/adapters/Visitor.repository';
+import { GetOpenAccessRecordsUseCase } from '../../application/use-cases/GetOpenAccessRecordsUseCase';
 
 const vehicleRepository = new VehicleRepository(AppDataSource);
 const visitorRepository = new VisitorRepository(AppDataSource);
@@ -18,7 +19,8 @@ const AccessRecordControllerInstance = new AccessRecordController(
     new RegisterEntryUseCase(vehicleRepository, parkingZoneRepository ,accessRecordRepository),
     new RegisterExitUseCase(accessRecordRepository, parkingZoneRepository),
     new RegisterEntryVisitorUseCase(visitorRepository, parkingZoneRepository ,accessRecordRepository),
-    new RegisterExitVisitorUseCase(accessRecordRepository, parkingZoneRepository)
+    new RegisterExitVisitorUseCase(accessRecordRepository, parkingZoneRepository),
+    new GetOpenAccessRecordsUseCase(accessRecordRepository)
 )
 
 export default AccessRecordControllerInstance;

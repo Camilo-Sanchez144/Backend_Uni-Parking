@@ -23,6 +23,7 @@ router.get('/', async (req, res) => {
         }
     }
 );
+
 router.patch('/:idParkingZone', async (req, res) => {
         try {
             await parkingZoneControllerIntance.updateParkingZone(req, res);

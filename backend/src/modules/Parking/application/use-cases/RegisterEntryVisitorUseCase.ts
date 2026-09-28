@@ -29,22 +29,34 @@ export class RegisterEntryVisitorUseCase {
                 "No existe una zona para este tipo de vehículo"
             );
         }
-        zone.occupySpace();
         if (zone.id === undefined) {
             throw new Error('No se puede actualizar una zona de parqueo sin id');
         }
-        await this.parkingZoneRepository.updateParkingZone(zone.id,zone);
+        // El puesto se reserva en la base de datos antes de crear el registro: así dos
+        // ingresos simultáneos no pueden quedarse con el mismo último puesto libre.
+        if (!(await this.parkingZoneRepository.occupySpace(zone.id))) {
+            throw new Error("No hay espacios disponibles");
+        }
 
         const record = new AccessRecord(
-            "",
-            visitor.plate_vehicle_visitor,
+            null,
+            // Sin placa (bicicleta, scooter) va null, no "": el índice único de
+            // registros abiertos por placa solo deja pasar los NULL.
+            visitor.plate_vehicle_visitor || null,
             visitor.id,
             visitor.type_vehicle,
             new Date(),
             null
         );
 
-        await this.accessRecordRepository.saveAccessRecord(record);
+        try {
+            await this.accessRecordRepository.saveAccessRecord(record);
+        } catch (error) {
+            // Si el registro no se guarda (p. ej. un ingreso duplicado que frena el
+            // índice único), el puesto reservado vuelve a quedar libre.
+            await this.parkingZoneRepository.releaseSpace(zone.id);
+            throw error;
+        }
 
         return record;
     }

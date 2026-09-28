@@ -1,6 +1,7 @@
 import { IIncidentRepository } from "../../domain/ports/IIncident.repository";
 import { UpdateIncidentDto } from "../dto/UpdateIncident.dto";
 import { Incident } from "../../domain/entities/Incident";
+import { UserEntity } from "../../../User/infraestructure/persistence/User.Entity";
 
 export class UpdateIncidentUseCase {
 
@@ -28,8 +29,12 @@ export class UpdateIncidentUseCase {
             updateData.estado = data.estado;
         }
 
+        // Antes se asignaba `id_usuario`, que la entidad no tiene: TypeORM lo ignoraba
+        // y el dueño de la incidencia nunca cambiaba.
         if (data.id_usuario !== undefined) {
-            updateData.id_usuario = data.id_usuario;
+            const owner = new UserEntity();
+            owner.id_user = data.id_usuario;
+            updateData.owner = owner;
         }
 
         return this.incidentRepository.updateIncident(id, updateData);

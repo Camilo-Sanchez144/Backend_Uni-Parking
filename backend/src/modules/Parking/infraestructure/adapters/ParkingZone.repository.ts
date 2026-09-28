@@ -25,6 +25,28 @@ export class ParkingZoneRepository implements IParkingZoneRepository{
         await this.dataSource.getRepository(ParkingZoneEntity).update(idParkingZone,{ available_spaces_parking_zone: parkingZone.availableSpaces});
         return parkingZone;
     }
+    // El cálculo lo hace Postgres en el mismo UPDATE: leer, restar y guardar desde aquí
+    // perdía un ingreso cuando dos llegaban al mismo tiempo.
+    async occupySpace(idParkingZone: number): Promise<boolean> {
+        const result = await this.dataSource.getRepository(ParkingZoneEntity)
+            .createQueryBuilder()
+            .update(ParkingZoneEntity)
+            .set({ available_spaces_parking_zone: () => "available_spaces_parking_zone - 1" })
+            .where("id_parking_zone = :id", { id: idParkingZone })
+            .andWhere("available_spaces_parking_zone > 0")
+            .execute();
+        return (result.affected ?? 0) > 0;
+    }
+    async releaseSpace(idParkingZone: number): Promise<boolean> {
+        const result = await this.dataSource.getRepository(ParkingZoneEntity)
+            .createQueryBuilder()
+            .update(ParkingZoneEntity)
+            .set({ available_spaces_parking_zone: () => "available_spaces_parking_zone + 1" })
+            .where("id_parking_zone = :id", { id: idParkingZone })
+            .andWhere("available_spaces_parking_zone < total_capacity_parking_zone")
+            .execute();
+        return (result.affected ?? 0) > 0;
+    }
     private toDomain(entity: ParkingZoneEntity): ParkingZone {
         return new ParkingZone(
             entity.id_parking_zone,

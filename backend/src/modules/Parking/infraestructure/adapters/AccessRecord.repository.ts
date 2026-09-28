@@ -16,12 +16,24 @@ export class AccessRecordRepository implements IAccessRecordRepository{
         const saved = await this.dataSource.getRepository(AccessRecordEntity).save(entity);
         return this.toDomain(saved);
     }
-    async updateAccessRecord(accessRecord: AccessRecord): Promise<AccessRecord> {
+    async closeAccessRecord(accessRecord: AccessRecord): Promise<boolean> {
         if (accessRecord.id === null) {
-            throw new Error("No se puede actualizar un registro de acceso sin ID");
+            throw new Error("No se puede cerrar un registro de acceso sin ID");
         }
-        await this.dataSource.getRepository(AccessRecordEntity).update(accessRecord.id, { exit_date_time_access_record: accessRecord.exitDateTime });
-        return accessRecord;
+        // La condición "sin salida" va en el mismo UPDATE: de dos salidas simultáneas
+        // del mismo vehículo, solo una cierra el registro (y libera el puesto).
+        const result = await this.dataSource.getRepository(AccessRecordEntity).update(
+            { id_access_record: accessRecord.id, exit_date_time_access_record: IsNull() },
+            { exit_date_time_access_record: accessRecord.exitDateTime }
+        );
+        return (result.affected ?? 0) > 0;
+    }
+    async findOpenRecords(): Promise<AccessRecord[]> {
+        const entities = await this.dataSource.getRepository(AccessRecordEntity).find({
+            where: { exit_date_time_access_record: IsNull() },
+            order: { entry_date_time_access_record: "DESC" }
+        });
+        return entities.map(entity => this.toDomain(entity));
     }
     async findOpenRecordByPlate(plate: string): Promise<AccessRecord | null> {
         const entity = await this.dataSource.getRepository(AccessRecordEntity).findOne({
