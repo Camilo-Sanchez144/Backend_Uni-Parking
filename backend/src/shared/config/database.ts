@@ -28,5 +28,6 @@ export const AppDataSource = new DataSource({
     AccessRecordEntity,
     ParkingZoneEntity,
   ],
+  // En producción no se toca el esquema solo: ahí los cambios de tablas van con migraciones.
   synchronize: process.env.NODE_ENV !== "production",
 });

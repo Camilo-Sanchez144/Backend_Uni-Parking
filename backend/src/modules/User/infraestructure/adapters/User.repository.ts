@@ -60,6 +60,10 @@ export class UserRepository implements IUserRepository{
         await this.dataSource.getRepository(UserEntity).update({id_user:id}, {status_user:false});
         return true;
     }
+    async updateRole(id: string, roleId: number): Promise<void> {
+        // role_id_user es varchar en la base de datos, como en toEntity.
+        await this.dataSource.getRepository(UserEntity).update({ id_user: id }, { role_id_user: String(roleId) });
+    }
 
     private toDomain(entity: UserEntity): User {
         const roleId = Number(entity.role_id_user);

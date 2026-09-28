@@ -8,6 +8,9 @@ import { verifyFirebaseToken } from "../../../../shared/auth/verifyFirebaseToken
 import { getFirebaseAuth } from "../../../../shared/config/firebase";
 import { RestoreUserUseCase } from "../../application/use-cases/RestoreUserUseCase";
 import { GetAllUsersUnactiveUseCase } from "../../application/use-cases/GetAllUsersUnactiveUseCase";
+import { ChangeUserRoleError, ChangeUserRoleUseCase } from "../../application/use-cases/ChangeUserRoleUseCase";
+import { validateChangeRole } from "../validations/ChangeRole.validation";
+import { DecodedIdToken } from "firebase-admin/auth";
 
 export class UserController{
     constructor(
@@ -16,9 +19,15 @@ export class UserController{
         private readonly getUserById: GetUserByIdUseCase,
         private readonly deleteUser: DeleteUserUseCase,
         private readonly restoreUser: RestoreUserUseCase,
-        private readonly getAllUsersUnactive: GetAllUsersUnactiveUseCase
+        private readonly getAllUsersUnactive: GetAllUsersUnactiveUseCase,
+        private readonly changeUserRole: ChangeUserRoleUseCase
     ){}
 
+    /**
+     * POST /users — registra a quien inició sesión con su cuenta institucional. Si ya estaba
+     * registrado no le cambia el rol: solo copia a Firebase el que tiene en la base de datos.
+     * Los usuarios nuevos empiezan como userEstandar (AddUserUseCase).
+     */
     createUser = async (req: Request, res: Response) => {
         let decoded: Awaited<ReturnType<typeof verifyFirebaseToken>>;
         try {
@@ -75,6 +84,35 @@ export class UserController{
             }
         }
     } 
+    /** PATCH /users/:userId/role — cambia el rol en Firebase y en la base de datos. */
+    changeRole = async (req: Request, res: Response) => {
+        try {
+            const { error, value } = validateChangeRole(req.body);
+            if (error) {
+                res.status(400).json({ mensaje: 'Error en la validación', detail: error.details });
+                return;
+            }
+            // authorize ya validó el token y lo dejó decodificado en req.user.
+            const requester = (req as any).user as DecodedIdToken;
+            const user = await this.changeUserRole.execute({
+                userId: String(req.params.userId),
+                roleId: value.roleId,
+                requesterRoleId: requester.rolId,
+            });
+            res.status(200).json(user);
+        } catch (error) {
+            if (error instanceof ChangeUserRoleError) {
+                res.status(error.statusCode).json({ error: error.message });
+                return;
+            }
+            if (error instanceof Error) {
+                res.status(500).json({
+                    error: "Error interno del servidor",
+                    details: error.message
+                });
+            }
+        }
+    }
     findAll = async (req:Request, res:Response) => {
         try{
             const users = await this.getAllUsers.execute();

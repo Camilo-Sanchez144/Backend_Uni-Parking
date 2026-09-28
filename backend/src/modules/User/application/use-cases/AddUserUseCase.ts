@@ -1,7 +1,9 @@
 import { IUserRepository } from "../../domain/ports/IUser.repository";
 import { User } from "../../domain/entities/User";
+import { ROLE_IDS } from "../../../Role/domain/entities/Role";
 
-export const STUDENT_ROLE_ID = 1;
+/** Rol con el que empieza todo usuario nuevo: userEstandar (estudiantes, docentes y administrativos). */
+export const STUDENT_ROLE_ID = ROLE_IDS.USER_ESTANDAR;
 
 export type CreateUserProfileData = {
   id: string;

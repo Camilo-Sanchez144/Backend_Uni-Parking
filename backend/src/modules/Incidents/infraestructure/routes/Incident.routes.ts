@@ -1,10 +1,12 @@
 import { Router } from 'express';
 
 import IncidentControllerInstance from '../controllers/Incident.controller.instance';
+import { authorize, validatePermission } from '../../../../shared/middleware/authorize';
 
+// Cada ruta exige su permiso; la lista completa está en shared/config/seedPermission.ts.
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', authorize(validatePermission, 'incident:read'), async (req, res) => {
     try {
         await IncidentControllerInstance.findAll(req, res);
     } catch (error) {
@@ -15,7 +17,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', authorize(validatePermission, 'incident:read-one'), async (req, res) => {
     try {
         await IncidentControllerInstance.findById(req, res);
     } catch (error) {
@@ -26,7 +28,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', authorize(validatePermission, 'incident:create'), async (req, res) => {
     try {
         await IncidentControllerInstance.create(req, res);
     } catch (error) {
@@ -37,7 +39,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authorize(validatePermission, 'incident:update'), async (req, res) => {
     try {
         await IncidentControllerInstance.update(req, res);
     } catch (error) {
@@ -48,7 +50,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authorize(validatePermission, 'incident:delete'), async (req, res) => {
     try {
         await IncidentControllerInstance.delete(req, res);
     } catch (error) {
