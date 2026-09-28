@@ -2,19 +2,19 @@ import { Entity, PrimaryColumn, ManyToOne, JoinColumn } from "typeorm";
 import { RoleEntity } from "./Role.entity";
 import { PermissionEntity } from "./Permission.Entity";
 
-@Entity('RolePermission')
+@Entity("RolePermission")
 export class RolePermissionEntity {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "integer" })
   id_role!: number;
 
-  @PrimaryColumn()
-  id_permission!: string;
+  @PrimaryColumn({ type: "integer" })
+  id_permission!: number;
 
-  @ManyToOne(() => RoleEntity, (role) => role.rolePermissions)
+  @ManyToOne(() => RoleEntity, (role) => role.rolePermissions, { onDelete: "CASCADE" })
   @JoinColumn({ name: "id_role" })
   role!: RoleEntity;
 
-  @ManyToOne(() => PermissionEntity)
+  @ManyToOne(() => PermissionEntity, { onDelete: "CASCADE" })
   @JoinColumn({ name: "id_permission" })
   permission!: PermissionEntity;
 }

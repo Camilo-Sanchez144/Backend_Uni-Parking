@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import AccessRecordControllerInstance from '../controllers/AccessRecord.controller.instance';
+import { validatePermission } from '../../../../shared/middleware/authorize';
+import { authorize } from '../../../../shared/middleware/authorize';
 
 const router = Router();
 
@@ -23,7 +25,7 @@ router.post('/entry/:plate', async (req, res) => {
         });
     }
 });
-router.get('/status/:plate', async (req, res) => {
+router.get('/status/:plate', authorize(validatePermission, 'parking-zone:read'), async (req, res) => {
     try {
         await AccessRecordControllerInstance.getVehicleStatus(req, res);
     } catch (error) {
@@ -72,3 +74,4 @@ router.patch('/exit/visitor/:visitorId', async (req, res) => {
 
 
 export default router;
+
