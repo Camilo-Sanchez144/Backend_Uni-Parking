@@ -1,10 +1,10 @@
 import { DataSource, Repository } from "typeorm";
 import { Visitor, DocumentType } from "../../domain/entities/Visitor";
-import { VisitorPort } from "../../domain/ports/IVisitor.repository";
+import { IVisitorRepository } from "../../domain/ports/IVisitor.repository";
 import { Vehicle } from "../../../Vehicle/domain/entities/Vehicle";
 import { VisitorEntity } from "../persistence/Visitor.Entity";
 
-export class VisitorRepository implements VisitorPort{
+export class VisitorRepository implements IVisitorRepository{
 
     constructor(private readonly dataSource: DataSource){}
 

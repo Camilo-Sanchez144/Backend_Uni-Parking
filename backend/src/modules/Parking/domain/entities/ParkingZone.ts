@@ -1,6 +1,6 @@
 export class ParkingZone {
     constructor(
-        public id: number,
+        public id: number | undefined,
         public vehicleType: string,
         public totalCapacity: number,
         public availableSpaces: number

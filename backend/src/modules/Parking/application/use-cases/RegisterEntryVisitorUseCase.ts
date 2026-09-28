@@ -1,33 +1,29 @@
-import { IVehicleRepository } from "../../../Vehicle/domain/ports/IVehicle.repository";
+import { IVisitorRepository } from '../../../Visitors/domain/ports/IVisitor.repository'
 import { AccessRecord } from "../../domain/entities/AccessRecord";
 import { IAccessRecordRepository } from "../../domain/ports/IAccessRecord.repository";
 import { IParkingZoneRepository } from "../../domain/ports/IParkingZone.repository";
 
-export class RegisterEntryUseCase {
+export class RegisterEntryVisitorUseCase {
 
     constructor(
-        private vehicleRepository: IVehicleRepository,
+        private visitorRepository: IVisitorRepository,
         private parkingZoneRepository: IParkingZoneRepository,
         private accessRecordRepository: IAccessRecordRepository
     ) {}
 
-    async execute(plate: string) {
+    async execute(idVisitor: number) {
 
-        const vehicle = await this.vehicleRepository.getVehicleByPlate(plate);
-
-        if (!vehicle) {
-            throw new Error("Vehículo no encontrado");
+        const visitor = await this.visitorRepository.findById(idVisitor)
+        if (!visitor) {
+            throw new Error("Usuario no encontrado");
         }
-        if (!vehicle.is_authorized) {
-            throw new Error("Vehículo no autorizado");
-        }
-        const openRecord = await this.accessRecordRepository.findOpenRecordByPlate(plate);
+        const openRecord = await this.accessRecordRepository.findOpenRecordByVisitorId(idVisitor);
         if (openRecord) {
             throw new Error(
-                "El vehículo ya se encuentra dentro del parqueadero"
+                "El visitante ya se encuentra dentro del parqueadero"
             );
         }
-        const zone = await this.parkingZoneRepository.findParkingZoneByVehicleType(vehicle.type);
+        const zone = await this.parkingZoneRepository.findParkingZoneByVehicleType(visitor.type_vehicle);
         if (!zone) {
             throw new Error(
                 "No existe una zona para este tipo de vehículo"
@@ -44,9 +40,11 @@ export class RegisterEntryUseCase {
 
         const record = new AccessRecord(
             null,
-            vehicle.plate,
-            null,
-            vehicle.type,
+            // Sin placa (bicicleta, scooter) va null, no "": el índice único de
+            // registros abiertos por placa solo deja pasar los NULL.
+            visitor.plate_vehicle_visitor || null,
+            visitor.id,
+            visitor.type_vehicle,
             new Date(),
             null
         );

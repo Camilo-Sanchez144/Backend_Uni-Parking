@@ -12,7 +12,7 @@ export class AddUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
 
   async execute(data: CreateUserProfileData): Promise<User> {
-    const user = new User(data.id, data.name, data.email, data.roleId);
+    const user = new User(data.id, data.name, data.email, data.roleId, []);
     return this.userRepository.addUser(user);
   }
 }

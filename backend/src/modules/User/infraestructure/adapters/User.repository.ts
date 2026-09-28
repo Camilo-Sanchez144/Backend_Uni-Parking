@@ -3,6 +3,7 @@ import { User } from "../../domain/entities/User";
 import { IUserRepository } from "../../domain/ports/IUser.repository";
 import { UserEntity } from "../persistence/User.Entity";
 import { Vehicle } from "../../../Vehicle/domain/entities/Vehicle";
+import { RestoreUserFirebase } from "../../../../scripts/testRestoreUser";
 
 export class UserRepository implements IUserRepository{
     constructor(private readonly dataSource: DataSource){}
@@ -39,6 +40,7 @@ export class UserRepository implements IUserRepository{
         if (!user) {
             throw new Error('No se encontró el usuario o ya está activo');
         }
+        RestoreUserFirebase();
         await this.dataSource.getRepository(UserEntity).update({ id_user: id }, { status_user: true });
         return true;
     }

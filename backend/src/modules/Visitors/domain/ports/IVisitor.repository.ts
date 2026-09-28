@@ -1,6 +1,6 @@
 import { Visitor } from "../entities/Visitor";
 
-export interface VisitorPort{
+export interface IVisitorRepository{
     /**
      * Guarda el visitante junto con su vehículo, todo o nada. Si el vehículo tiene placa y ya
      * existe, se reutiliza en vez de crear otro. Devuelve el visitante con el vehículo definitivo.

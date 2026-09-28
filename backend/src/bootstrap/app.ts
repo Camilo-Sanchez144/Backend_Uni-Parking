@@ -4,6 +4,7 @@ import userRoutes from '../modules/User/infraestructure/routes/User.routes'
 import visitorRoutes from '../modules/Visitors/infraestructure/routes/Visitor.routes'
 import incidentRoutes from '../modules/Incidents/infraestructure/routes/Incident.routes'
 import AccessRecord from '../modules/Parking/infraestructure/routes/AccessRecord.routes'
+import parkingZoneRoutes from '../modules/Parking/infraestructure/routes/ParkingZone.routes'
 
 export function createApp() {
   const app = express();
@@ -15,6 +16,7 @@ export function createApp() {
   app.use('/visitors', visitorRoutes);
   app.use('/incidents', incidentRoutes);
   app.use('/parking', AccessRecord);
-
+  app.use('/parkingZone', parkingZoneRoutes);
+  
   return app;
 }
