@@ -5,7 +5,7 @@ import { VehicleEntity } from "../../../Vehicle/infraestructure/persistence/Vehi
 export class VisitorEntity{
 
     @PrimaryGeneratedColumn()
-    id_visitor!:string;
+    id_visitor!:number;
 
     @Column({type:"varchar", length: 40})
     first_name_visitor!:string;

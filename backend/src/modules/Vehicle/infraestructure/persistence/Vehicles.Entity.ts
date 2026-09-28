@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { UserEntity } from "../../../User/infraestructure/persistence/User.Entity";
 
 @Entity('Vehicle')
@@ -21,6 +21,9 @@ export class VehicleEntity{
 
     @Column({type:"boolean"})
     is_authorized_vehicle!:boolean;
+
+    @Column({ type: "varchar", length: 128 })
+    id_owner_vehicle!: string;
 
     @ManyToOne(() => UserEntity, (user) => user.vehicles)
     @JoinColumn({ name: "id_owner_vehicle" }) 

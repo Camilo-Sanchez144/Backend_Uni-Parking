@@ -1,3 +1,5 @@
 import "reflect-metadata";
-import "dotenv/config";
-import "./web/server";
+import dotenv from "dotenv";
+
+dotenv.config();
+require("./web/server");

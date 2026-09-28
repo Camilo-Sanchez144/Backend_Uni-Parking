@@ -1,10 +1,10 @@
-import { VisitorPort } from "../../domain/ports/IVisitor.repository";
+import { IVisitorRepository } from "../../domain/ports/IVisitor.repository";
 import { Visitor } from "../../domain/entities/Visitor";
 
 export class GetVisitor {
-    constructor(private readonly visitorPort: VisitorPort) {}
+    constructor(private readonly visitorPort: IVisitorRepository) {}
 
-    async execute(id: string): Promise<Visitor | null> {
+    async execute(id: number): Promise<Visitor | null> {
         return this.visitorPort.findById(id);
     }
 }

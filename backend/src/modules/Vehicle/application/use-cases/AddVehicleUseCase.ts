@@ -6,7 +6,7 @@ import { randomUUID } from "crypto";
 export class AddVehicleUseCase {
     constructor(private readonly vehicleRepository: IVehicleRepository) {}
 
-async execute(data: CreateVehicleData): Promise<CreateVehicleData> {
+async execute(data: CreateVehicleData): Promise<Vehicle> {
         const vehicle = new Vehicle(
             data.plate ?? randomUUID(),
             data.brand,

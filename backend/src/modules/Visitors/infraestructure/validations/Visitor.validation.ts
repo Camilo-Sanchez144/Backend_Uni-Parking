@@ -119,8 +119,3 @@ export function validateCreateVisitor(data: any): ValidationResult {
   // abortEarly: false devuelve todos los errores juntos, para pintarlos de una vez en el formulario.
   return visitorSchema.validate(data, { abortEarly: false });
 }
-
-/** Un id que no sea UUID nunca existe; sin esto, Postgres lo rechaza con un error y saldría un 500. */
-export function validateVisitorId(id: string): joi.ValidationResult<string> {
-  return joi.string().uuid().required().validate(id);
-}

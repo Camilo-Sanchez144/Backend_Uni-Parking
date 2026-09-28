@@ -1,6 +1,4 @@
 import * as joi from 'joi';
-
-import { UserEntity } from '../../../User/infraestructure/persistence/User.Entity';
 import { UUID } from 'crypto';
 
 export type CreateVehicleData = {
@@ -9,7 +7,7 @@ export type CreateVehicleData = {
   model: number;
   color: string;
   type: string;
-  owner: UserEntity;
+  owner: string;
 };
 
 type ValidationResult = {
