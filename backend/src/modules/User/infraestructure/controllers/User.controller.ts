@@ -20,23 +20,53 @@ export class UserController{
     ){}
 
     createUser = async (req: Request, res: Response) => {
-        const DEFAULT_ROLE_ID = 3;
+        let decoded: Awaited<ReturnType<typeof verifyFirebaseToken>>;
         try {
-            const decoded = await verifyFirebaseToken(req.headers.authorization);
-            const { error, value } = validateRegisterUser(req.body);
-            if (error) {
+            decoded = await verifyFirebaseToken(req.headers.authorization);
+        } catch {
+            res.status(401).json({ error: "Token inválido o ausente" });
+            return;
+        }
+
+        const email = decoded.email;
+        if (typeof email !== "string" || !/^[^@\s]+@uniempresarial\.edu\.co$/i.test(email)) {
+            res.status(403).json({ error: "Se requiere un correo institucional" });
+            return;
+        }
+
+        const { error, value } = validateRegisterUser(req.body);
+        if (error) {
             res.status(400).json({ mensaje: 'Error en la validación', detail: error.details });
             return;
+        }
+
+        try {
+            let user = await this.getUserById.executeIncludingInactive(decoded.uid);
+            let isNewUser = false;
+
+            if (user === null) {
+                user = await this.addUser.execute({
+                    id: decoded.uid,
+                    name: value.name,
+                    email,
+                });
+                isNewUser = true;
             }
-            await getFirebaseAuth().setCustomUserClaims(decoded.uid, { rolId: DEFAULT_ROLE_ID });
-            const user = await this.addUser.execute({
-            id: decoded.uid,          
-            name: value.name,          
-            email: decoded.email!,     
-            roleId: DEFAULT_ROLE_ID,
+
+            const roleId = Number(user.roleId);
+            if (!Number.isSafeInteger(roleId) || roleId < 1) {
+                throw new Error("El usuario tiene un rol inválido en PostgreSQL");
+            }
+
+            const firebaseAuth = getFirebaseAuth();
+            const firebaseUser = await firebaseAuth.getUser(decoded.uid);
+            await firebaseAuth.setCustomUserClaims(decoded.uid, {
+                ...(firebaseUser.customClaims ?? {}),
+                rolId: roleId,
             });
-            res.status(201).json(user);
-        }catch (error) {
+
+            res.status(isNewUser ? 201 : 200).json(user);
+        } catch (error) {
             if (error instanceof Error) {
                 res.status(500).json({
                     error: "Error interno del servidor",

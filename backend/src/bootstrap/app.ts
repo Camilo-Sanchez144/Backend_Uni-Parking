@@ -1,5 +1,6 @@
 import express from "express";
 import vehicleRoutes from '../modules/Vehicle/infraestructure/routes/Vehicle.routes'
+import userRoutes from '../modules/User/infraestructure/routes/User.routes'
 
 export function createApp() {
   const app = express();
@@ -7,6 +8,7 @@ export function createApp() {
   app.use(express.json());
   app.use(cors());
   app.use('/vehicles', vehicleRoutes);
+  app.use('/users', userRoutes);
   
   return app;
 }

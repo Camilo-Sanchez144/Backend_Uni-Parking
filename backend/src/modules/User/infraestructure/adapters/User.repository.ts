@@ -20,6 +20,14 @@ export class UserRepository implements IUserRepository{
         if (!entity) return null;
         return this.toDomain(entity);
     }
+    async getUserByIdIncludingInactive(id: string): Promise<User | null> {
+        const entity = await this.dataSource.getRepository(UserEntity).findOne({
+            where: { id_user: id },
+            relations: { vehicles: true }
+        });
+        if (!entity) return null;
+        return this.toDomain(entity);
+    }
     async getAllUsers(): Promise<User[]> {
         const entities = await this.dataSource.getRepository(UserEntity).find({
             where:{ status_user: true }, 
@@ -52,6 +60,7 @@ export class UserRepository implements IUserRepository{
     }
 
     private toDomain(entity: UserEntity): User {
+        const roleId = Number(entity.role_id_user);
         const vehicles: Vehicle[] = entity.vehicles ? entity.vehicles.map(vehicle => new Vehicle(
                 vehicle.plate_vehicle,
                 vehicle.brand_vehicle,
@@ -67,7 +76,7 @@ export class UserRepository implements IUserRepository{
             entity.id_user,
             entity.name_user,
             entity.email_user,
-            entity.role_id_user,
+            roleId,
             vehicles,
             entity.status_user
         );
@@ -78,7 +87,7 @@ export class UserRepository implements IUserRepository{
         entity.id_user = user.id;
         entity.name_user = user.name;
         entity.email_user = user.email;
-        entity.role_id_user = user.roleId;
+        entity.role_id_user = String(user.roleId);
         entity.status_user = user.status_user;
 
         return entity;
