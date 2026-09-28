@@ -7,6 +7,8 @@ import { GetUserByIdUseCase } from '../../application/use-cases/GetUserByIdUseCa
 import { DeleteUserUseCase } from '../../application/use-cases/DeleteUserUseCase';
 import { RestoreUserUseCase } from '../../application/use-cases/RestoreUserUseCase';
 import { GetAllUsersUnactiveUseCase } from '../../application/use-cases/GetAllUsersUnactiveUseCase';
+import { ChangeUserRoleUseCase } from '../../application/use-cases/ChangeUserRoleUseCase';
+import { RoleRepository } from '../../../Role/infraestructure/adapters/Role.repository';
 
 const userRepository = new UserRepository(AppDataSource);
 
@@ -16,7 +18,8 @@ const UserControllerInstance = new UserController(
     new GetUserByIdUseCase(userRepository),
     new DeleteUserUseCase(userRepository),
     new RestoreUserUseCase(userRepository),
-    new GetAllUsersUnactiveUseCase(userRepository)
+    new GetAllUsersUnactiveUseCase(userRepository),
+    new ChangeUserRoleUseCase(userRepository, new RoleRepository(AppDataSource))
 );
 
 export default UserControllerInstance

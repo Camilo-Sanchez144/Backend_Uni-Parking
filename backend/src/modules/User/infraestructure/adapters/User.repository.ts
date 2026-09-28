@@ -52,6 +52,9 @@ export class UserRepository implements IUserRepository{
         await this.dataSource.getRepository(UserEntity).update({id_user:id}, {status_user:false});
         return true;
     }
+    async updateRole(id: string, roleId: number): Promise<void> {
+        await this.dataSource.getRepository(UserEntity).update({ id_user: id }, { role_id_user: roleId });
+    }
 
     private toDomain(entity: UserEntity): User {
         const vehicles: Vehicle[] = entity.vehicles ? entity.vehicles.map(vehicle => new Vehicle(

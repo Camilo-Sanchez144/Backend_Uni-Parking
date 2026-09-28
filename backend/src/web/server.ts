@@ -12,8 +12,10 @@ async function main() {
   }
 
   try {
-    await seedPermissions(AppDataSource, 1);
-    console.log("Permisos sincronizados");
+    const seed = await seedPermissions(AppDataSource);
+    console.log(
+      `Roles y permisos sincronizados: ${seed.roles} roles, ${seed.permissions} permisos, ${seed.assignments} asignaciones`,
+    );
   } catch (err) {
     console.error("Error ejecutando el seed de permisos:", err);
     process.exit(1);

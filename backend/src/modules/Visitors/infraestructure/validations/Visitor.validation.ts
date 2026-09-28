@@ -1,11 +1,14 @@
 import { CreateVisitorDto } from '../../application/dto/CreateVisitor.dto';
 import { DOCUMENT_TYPES } from '../../domain/entities/Visitor';
 import * as joi from 'joi';
+import { brandSchema, colorSchema, detailOnCreate } from '../../../../shared/validations/vehicleDetails.validation';
 
 // Mismas reglas que el formulario del front, para que lo que pasa allá no falle acá.
 const NAME_PATTERN = /^[\p{L}][\p{L}\s'.-]*$/u;
 const DOCUMENT_NUMBER_PATTERN = /^\d{6,11}$/;
-const PLATE_PATTERN = /^[A-Z]{3}[0-9]{3}$/;
+// Placa de moto colombiana: ABC12D; las motos antiguas no llevan la letra final (ABC12).
+// La última posición también admite un número (ABC123).
+const PLATE_PATTERN = /^[A-Z]{3}[0-9]{2}[A-Z0-9]?$/;
 
 type ValidationResult = {
   error: joi.ValidationError | undefined;
@@ -29,23 +32,16 @@ const nameField = (label: string) => joi.string()
 // Vehículo del visitante: sin id_owner, no es dueño registrado, solo pasa con un carro.
 const visitorVehicleSchema = joi.object({
   plate: joi.string()
-    .trim()
+    .replace(/[\s-]/g, '')
+    .uppercase()
     .pattern(PLATE_PATTERN)
     .messages({
-      'string.pattern.base': 'La placa debe tener el formato ABC123 (3 letras y 3 números)',
+      'string.pattern.base': 'La placa debe tener el formato ABC12D: 3 letras, 2 números y una letra o número al final (opcional en motos antiguas)',
       'string.empty': 'La placa es obligatoria',
     }),
 
-  brand: joi.string()
-    .trim()
-    .min(2)
-    .pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúñÑ]+)?$/)
-    .required()
-    .messages({
-      'string.pattern.base': 'La marca solo puede contener letras',
-      'string.empty': 'La marca es obligatoria',
-      'string.min': 'La marca debe tener al menos 2 caracteres',
-    }),
+  // Bicicleta y scooter pueden dejar marca y color vacíos (ver shared/validations/vehicleDetails.validation.ts).
+  brand: detailOnCreate(brandSchema()),
 
   model: joi.number()
     .required()
@@ -54,15 +50,7 @@ const visitorVehicleSchema = joi.object({
       'any.required': 'El modelo es un campo requerido',
     }),
 
-  color: joi.string()
-    .trim()
-    .min(3)
-    .pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+$/)
-    .required()
-    .messages({
-      'string.pattern.base': 'El color solo puede contener letras',
-      'string.empty': 'El color es obligatorio',
-    }),
+  color: detailOnCreate(colorSchema()),
 
   type: joi.string()
     .trim()

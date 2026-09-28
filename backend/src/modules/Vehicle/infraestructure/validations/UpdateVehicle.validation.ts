@@ -1,5 +1,6 @@
 import * as joi from 'joi';
 import { CreateVehicleData } from './CreateVehicle.validation';
+import { brandSchema, colorSchema, detailOnUpdate } from '../../../../shared/validations/vehicleDetails.validation';
 
 export type UpdateVehicleData = Partial<Omit<CreateVehicleData, 'plate' | 'id_owner' | 'owner'>>;
 
@@ -10,27 +11,15 @@ type ValidationResult = {
 
 export function validateUpdateVehicle(data: any): ValidationResult {
   const updateSchema = joi.object({
-    brand: joi.string()
-      .trim()
-      .min(2)
-      .pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúñÑ]+)?$/)
-      .messages({
-        'string.pattern.base': 'La marca solo puede contener letras',
-        'string.min': 'La marca debe tener al menos 2 caracteres',
-      }),
+    // Para dejar vacía la marca o el color de una bicicleta o un scooter, hay que enviar también `type`.
+    brand: detailOnUpdate(brandSchema()),
 
     model: joi.number()
       .messages({
         'number.base': 'El modelo debe ser un número',
       }),
 
-    color: joi.string()
-      .trim()
-      .min(3)
-      .pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+$/)
-      .messages({
-        'string.pattern.base': 'El color solo puede contener letras',
-      }),
+    color: detailOnUpdate(colorSchema()),
 
     type: joi.string()
       .trim()

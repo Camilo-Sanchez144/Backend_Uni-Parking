@@ -8,6 +8,10 @@ import { verifyFirebaseToken } from "../../../../shared/auth/verifyFirebaseToken
 import { getFirebaseAuth } from "../../../../shared/config/firebase";
 import { RestoreUserUseCase } from "../../application/use-cases/RestoreUserUseCase";
 import { GetAllUsersUnactiveUseCase } from "../../application/use-cases/GetAllUsersUnactiveUseCase";
+import { ChangeUserRoleError, ChangeUserRoleUseCase } from "../../application/use-cases/ChangeUserRoleUseCase";
+import { validateChangeRole } from "../validations/ChangeRole.validation";
+import { ROLE_IDS } from "../../../Role/domain/entities/Role";
+import { DecodedIdToken } from "firebase-admin/auth";
 
 export class UserController{
     constructor(
@@ -16,13 +20,26 @@ export class UserController{
         private readonly getUserById: GetUserByIdUseCase,
         private readonly deleteUser: DeleteUserUseCase,
         private readonly restoreUser: RestoreUserUseCase,
-        private readonly getAllUsersUnactive: GetAllUsersUnactiveUseCase
+        private readonly getAllUsersUnactive: GetAllUsersUnactiveUseCase,
+        private readonly changeUserRole: ChangeUserRoleUseCase
     ){}
 
     createUser = async (req: Request, res: Response) => {
-        const DEFAULT_ROLE_ID = 3;
+        // Todo el que se registra empieza como userEstandar; los demás roles se asignan con PATCH /users/:userId/role.
+        const DEFAULT_ROLE_ID = ROLE_IDS.USER_ESTANDAR;
+        let decoded: DecodedIdToken;
         try {
-            const decoded = await verifyFirebaseToken(req.headers.authorization);
+            decoded = await verifyFirebaseToken(req.headers.authorization);
+        } catch {
+            res.status(401).json({ error: "Token inválido o expirado" });
+            return;
+        }
+        try {
+            // Registrarse otra vez no debe devolver a userEstandar a quien ya tiene otro rol.
+            if (await this.getUserById.execute(decoded.uid)) {
+                res.status(409).json({ error: "El usuario ya está registrado" });
+                return;
+            }
             const { error, value } = validateRegisterUser(req.body);
             if (error) {
             res.status(400).json({ mensaje: 'Error en la validación', detail: error.details });
@@ -45,6 +62,35 @@ export class UserController{
             }
         }
     } 
+    /** PATCH /users/:userId/role — cambia el rol en Firebase y en la base de datos. */
+    changeRole = async (req: Request, res: Response) => {
+        try {
+            const { error, value } = validateChangeRole(req.body);
+            if (error) {
+                res.status(400).json({ mensaje: 'Error en la validación', detail: error.details });
+                return;
+            }
+            // authorize ya validó el token y lo dejó decodificado en req.user.
+            const requester = (req as any).user as DecodedIdToken;
+            const user = await this.changeUserRole.execute({
+                userId: String(req.params.userId),
+                roleId: value.roleId,
+                requesterRoleId: requester.rolId,
+            });
+            res.status(200).json(user);
+        } catch (error) {
+            if (error instanceof ChangeUserRoleError) {
+                res.status(error.statusCode).json({ error: error.message });
+                return;
+            }
+            if (error instanceof Error) {
+                res.status(500).json({
+                    error: "Error interno del servidor",
+                    details: error.message
+                });
+            }
+        }
+    }
     findAll = async (req:Request, res:Response) => {
         try{
             const users = await this.getAllUsers.execute();

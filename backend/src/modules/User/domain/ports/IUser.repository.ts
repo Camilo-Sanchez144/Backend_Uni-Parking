@@ -7,4 +7,6 @@ export interface IUserRepository{
     getAllUserUnactive():Promise<User[]>;
     restoreUser(id:string):Promise<boolean>;
     deleteUser(id:string):Promise<boolean>;
+    /** Cambia solo el rol en la base de datos; el claim de Firebase lo cambia ChangeUserRoleUseCase. */
+    updateRole(id:string, roleId:number):Promise<void>;
 }

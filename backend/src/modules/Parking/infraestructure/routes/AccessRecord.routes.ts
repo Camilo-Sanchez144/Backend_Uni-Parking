@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import AccessRecordControllerInstance from '../controllers/AccessRecord.controller.instance';
-import { validatePermission } from '../../../../shared/middleware/authorize';
-import { authorize } from '../../../../shared/middleware/authorize';
+import { authorize, validatePermission } from '../../../../shared/middleware/authorize';
 
+// Cada ruta exige su permiso; la lista completa está en shared/config/seedPermission.ts.
 const router = Router();
 
-router.get('/records/open', async (req, res) => {
+router.get('/records/open', authorize(validatePermission, 'access-record:read-open'), async (req, res) => {
         try {
             await AccessRecordControllerInstance.findOpenRecords(req, res);
         } catch (error) {
@@ -16,7 +16,7 @@ router.get('/records/open', async (req, res) => {
     }
 );
 
-router.post('/entry/:plate', async (req, res) => {
+router.post('/entry/:plate', authorize(validatePermission, 'access-record:entry'), async (req, res) => {
     try {
         await AccessRecordControllerInstance.registerEntryVehicle(req, res);
     } catch (error) {
@@ -25,7 +25,7 @@ router.post('/entry/:plate', async (req, res) => {
         });
     }
 });
-router.get('/status/:plate', authorize(validatePermission, 'parking-zone:read'), async (req, res) => {
+router.get('/status/:plate', authorize(validatePermission, 'vehicle:status'), async (req, res) => {
     try {
         await AccessRecordControllerInstance.getVehicleStatus(req, res);
     } catch (error) {
@@ -34,7 +34,7 @@ router.get('/status/:plate', authorize(validatePermission, 'parking-zone:read'),
         });
     }
 });
-router.get('/historical/:plate', async (req, res) => {
+router.get('/historical/:plate', authorize(validatePermission, 'access-record:historical'), async (req, res) => {
     try {
         await AccessRecordControllerInstance.getVehiclehistoricalByPlate(req, res);
     } catch (error) {
@@ -43,7 +43,7 @@ router.get('/historical/:plate', async (req, res) => {
         });
     }
 });
-router.patch('/exit/:plate', async (req, res) => {
+router.patch('/exit/:plate', authorize(validatePermission, 'access-record:exit'), async (req, res) => {
     try {
         await AccessRecordControllerInstance.registerExitVehicle(req, res);
     } catch (error) {
@@ -52,7 +52,7 @@ router.patch('/exit/:plate', async (req, res) => {
         });
     }
 });
-router.post('/entry/visitor/:visitorId', async (req, res) => {
+router.post('/entry/visitor/:visitorId', authorize(validatePermission, 'access-record:visitor-entry'), async (req, res) => {
     try {
         await AccessRecordControllerInstance.registerEntryVisitor(req, res);
     } catch (error) {
@@ -62,7 +62,7 @@ router.post('/entry/visitor/:visitorId', async (req, res) => {
     }
 });
 
-router.patch('/exit/visitor/:visitorId', async (req, res) => {
+router.patch('/exit/visitor/:visitorId', authorize(validatePermission, 'access-record:visitor-exit'), async (req, res) => {
     try {
         await AccessRecordControllerInstance.registerExitVisitor(req, res);
     } catch (error) {

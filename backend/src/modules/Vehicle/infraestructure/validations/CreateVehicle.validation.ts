@@ -1,5 +1,6 @@
 import * as joi from 'joi';
 import { UUID } from 'crypto';
+import { brandSchema, colorSchema, detailOnCreate } from '../../../../shared/validations/vehicleDetails.validation';
 
 export type CreateVehicleData = {
   plate?:string | UUID;
@@ -22,16 +23,8 @@ export const vehicleDataSchema = joi.object({
       'string.empty': 'La placa es obligatoria',
     }),
 
-  brand: joi.string()
-    .trim()
-    .min(2)
-    .pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+(?:\s[A-Za-zÁÉÍÓÚáéíóúñÑ]+)?$/)
-    .required()
-    .messages({
-      'string.pattern.base': 'La marca solo puede contener letras',
-      'string.empty': 'La marca es obligatoria',
-      'string.min': 'La marca debe tener al menos 2 caracteres',
-    }),
+  // Bicicleta y scooter pueden dejar marca y color vacíos (ver shared/validations/vehicleDetails.validation.ts).
+  brand: detailOnCreate(brandSchema()),
 
   model: joi.number()
     .required()
@@ -40,15 +33,7 @@ export const vehicleDataSchema = joi.object({
       'any.required': 'El modelo es un campo requerido',
     }),
 
-  color: joi.string()
-    .trim()
-    .min(3)
-    .pattern(/^[A-Za-zÁÉÍÓÚáéíóúñÑ]+$/)
-    .required()
-    .messages({
-      'string.pattern.base': 'El color solo puede contener letras',
-      'string.empty': 'El color es obligatorio',
-    }),
+  color: detailOnCreate(colorSchema()),
 
   type: joi.string()
     .trim()

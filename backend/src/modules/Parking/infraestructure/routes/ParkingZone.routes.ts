@@ -1,10 +1,11 @@
-import { validatePermission } from './../../../../shared/middleware/authorize';
 import { Router } from 'express';
-import { authorize } from '../../../../shared/middleware/authorize';
+import { authorize, validatePermission } from '../../../../shared/middleware/authorize';
 import parkingZoneControllerIntance from '../controllers/ParkingZone.controller.instance';
+
+// Cada ruta exige su permiso; la lista completa está en shared/config/seedPermission.ts.
 const router = Router();
 
-router.post('/', async (req, res) => {
+router.post('/', authorize(validatePermission, 'parking-zone:create'), async (req, res) => {
     try {
         await parkingZoneControllerIntance.createParkingZone(req, res);
     } catch (error) {
@@ -14,7 +15,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/', authorize(validatePermission, 'vehicle:status'), async (req, res) => {
+router.get('/', authorize(validatePermission, 'parking-zone:read'), async (req, res) => {
     try {
         await parkingZoneControllerIntance.getAllParkingZone(req, res);
     } catch (error) {
@@ -23,7 +24,7 @@ router.get('/', authorize(validatePermission, 'vehicle:status'), async (req, res
         });
     }
 });
-router.patch('/:idParkingZone', async (req, res) => {
+router.patch('/:idParkingZone', authorize(validatePermission, 'parking-zone:update'), async (req, res) => {
     try {
         await parkingZoneControllerIntance.updateParkingZone(req, res);
     } catch (error) {
@@ -33,7 +34,7 @@ router.patch('/:idParkingZone', async (req, res) => {
     }
 });
 
-router.get('/:typeVehicle', async (req, res) => {
+router.get('/:typeVehicle', authorize(validatePermission, 'parking-zone:read-by-type'), async (req, res) => {
     try {
         await parkingZoneControllerIntance.findParkingZoneByVehicleType(req, res);
     } catch (error) {
