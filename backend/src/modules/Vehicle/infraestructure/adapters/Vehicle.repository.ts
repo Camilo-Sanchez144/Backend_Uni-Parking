@@ -66,7 +66,7 @@ export class VehicleRepository implements IVehicleRepository{
             entity.owner.id_user,
             entity.owner.name_user,
             entity.owner.email_user,
-            entity.owner.role_id_user,
+            Number(entity.owner.role_id_user),
             [], // vacío a propósito, para no reintroducir la cascada
             entity.owner.status_user
         )

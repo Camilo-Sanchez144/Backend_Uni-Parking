@@ -14,7 +14,7 @@ export class UserEntity{
     email_user!: string;
 
     @Column({type:'varchar'})
-    role_id_user!:number;
+    role_id_user!:string;
 
     @OneToMany(() => VehicleEntity, (vehicle) => vehicle.owner)
     vehicles!: VehicleEntity[];
