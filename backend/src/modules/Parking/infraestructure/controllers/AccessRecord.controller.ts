@@ -2,6 +2,7 @@ import { GetHistoricalError, GethistoricalByPlateUseCase } from './../../applica
 import { Request, Response } from "express";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { GetOpenAccessRecordsUseCase } from "../../application/use-cases/GetOpenAccessRecordsUseCase";
+import { GetOpenAccessRecordsCountUseCase } from "../../application/use-cases/GetOpenAccessRecordsCountUseCase";
 import { RegisterEntryUseCase } from "../../application/use-cases/RegisterEntryUseCase";
 import { RegisterEntryVisitorUseCase } from "../../application/use-cases/RegisterEntryVisitorUseCase";
 import { RegisterExitUseCase } from "../../application/use-cases/RegisterExitUseCase";
@@ -16,6 +17,7 @@ export class AccessRecordController {
         private readonly registerEntryVisitorVehicle: RegisterEntryVisitorUseCase,
         private readonly registerExitVisitorVehicle: RegisterExitVisitorUseCase,
         private readonly getOpenAccessRecords: GetOpenAccessRecordsUseCase,
+        private readonly getOpenAccessRecordsCount: GetOpenAccessRecordsCountUseCase,
         private readonly gethistoricalByPlate: GethistoricalByPlateUseCase,
         private readonly getStatusVehicle: GetVehicleStatusUseCase
     ){}
@@ -24,6 +26,17 @@ export class AccessRecordController {
         try {
             const records = await this.getOpenAccessRecords.execute();
             res.status(200).json(records);
+        } catch (err) {
+            if (err instanceof Error) {
+                res.status(500).json({ error: "Error al consultar los registros abiertos", details: err.message });
+            }
+        }
+    }
+
+    findOpenRecordsCount = async (req: Request, res: Response) => {
+        try {
+            const count = await this.getOpenAccessRecordsCount.execute();
+            res.status(200).json(count);
         } catch (err) {
             if (err instanceof Error) {
                 res.status(500).json({ error: "Error al consultar los registros abiertos", details: err.message });

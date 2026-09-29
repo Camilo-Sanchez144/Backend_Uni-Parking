@@ -9,6 +9,7 @@ import { RegisterEntryVisitorUseCase } from '../../application/use-cases/Registe
 import { RegisterExitVisitorUseCase } from '../../application/use-cases/RegisterExitVisitorUseCase';
 import { VisitorRepository } from '../../../Visitors/infraestructure/adapters/Visitor.repository';
 import { GetOpenAccessRecordsUseCase } from '../../application/use-cases/GetOpenAccessRecordsUseCase';
+import { GetOpenAccessRecordsCountUseCase } from '../../application/use-cases/GetOpenAccessRecordsCountUseCase';
 import { GethistoricalByPlateUseCase } from '../../application/use-cases/GethistoricalByPlateUseCase';
 import { GetVehicleStatusUseCase } from '../../application/use-cases/GetStatusVehicleUseCase';
 
@@ -23,6 +24,7 @@ const AccessRecordControllerInstance = new AccessRecordController(
     new RegisterEntryVisitorUseCase(visitorRepository, parkingZoneRepository ,accessRecordRepository),
     new RegisterExitVisitorUseCase(accessRecordRepository, parkingZoneRepository),
     new GetOpenAccessRecordsUseCase(accessRecordRepository),
+    new GetOpenAccessRecordsCountUseCase(accessRecordRepository),
     new GethistoricalByPlateUseCase(accessRecordRepository, vehicleRepository),
     new GetVehicleStatusUseCase(accessRecordRepository)
 )

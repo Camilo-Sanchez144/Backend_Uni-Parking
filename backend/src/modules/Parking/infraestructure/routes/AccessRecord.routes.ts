@@ -16,6 +16,17 @@ router.get('/records/open', authorize(validatePermission, 'access-record:read-op
     }
 );
 
+router.get('/records/open/count', authorize(validatePermission, 'access-record:read-open-count'), async (req, res) => {
+        try {
+            await AccessRecordControllerInstance.findOpenRecordsCount(req, res);
+        } catch (error) {
+            res.status(500).json({
+                message: "Error en la consulta de registros abiertos"
+            });
+        }
+    }
+);
+
 router.post('/entry/:plate', authorize(validatePermission, 'access-record:entry'), async (req, res) => {
     try {
         await AccessRecordControllerInstance.registerEntryVehicle(req, res);

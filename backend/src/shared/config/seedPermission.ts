@@ -62,6 +62,7 @@ export const PERMISSIONS: PermissionSeed[] = [
 
   // Ingresos y salidas (/parking)
   permission("access-record:read-open", "GET /parking/records/open", "Parking", "Ver quién está dentro: registros sin salida"),
+  permission("access-record:read-open-count", "GET /parking/records/open/count", "Parking", "Contar quién está dentro, sin ver las placas"),
   permission("access-record:historical", "GET /parking/historical/:plate", "Parking", "Consultar los ingresos y salidas de una placa"),
   permission("vehicle:status", "GET /parking/status/:plate", "Parking", "Consultar si un vehículo está dentro"),
   permission("access-record:entry", "POST /parking/entry/:plate", "Parking", "Registrar el ingreso de un vehículo de la comunidad"),
@@ -91,9 +92,9 @@ const ALL_PERMISSIONS = PERMISSIONS.map((item) => item.name_permission);
  *
  * El userEstandar solo recibe permisos que no exponen datos de otras personas: para
  * `access-record:historical`, `GethistoricalByPlateUseCase` comprueba que la placa
- * consultada sea de su propia cuenta (PEN-030). `access-record:read-open` sigue sin
- * dársele: expone las placas de todo el mundo y todavía no hay una versión que solo
- * cuente, sin identificarlas.
+ * consultada sea de su propia cuenta (PEN-030). `access-record:read-open` (los
+ * registros completos, con placa) sigue sin dársele; en cambio `access-record:read-open-count`
+ * sí, porque solo devuelve un conteo, sin identificar a nadie.
  */
 export const ROLE_PERMISSIONS: Record<number, readonly string[]> = {
   [ROLE_IDS.USER_ESTANDAR]: [
@@ -102,6 +103,7 @@ export const ROLE_PERMISSIONS: Record<number, readonly string[]> = {
     "vehicle:create",
     "user:read-one",
     "access-record:historical",
+    "access-record:read-open-count",
   ],
   [ROLE_IDS.VIGILANTE]: [
     // Lo que usa hoy el panel de seguridad del frontend.

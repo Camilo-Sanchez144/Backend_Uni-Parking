@@ -1,6 +1,6 @@
-import { DataSource, IsNull } from "typeorm";
+import { DataSource, IsNull, Not } from "typeorm";
 import { AccessRecord } from "../../domain/entities/AccessRecord";
-import { IAccessRecordRepository } from "../../domain/ports/IAccessRecord.repository";
+import { IAccessRecordRepository, OpenAccessRecordsCount } from "../../domain/ports/IAccessRecord.repository";
 import { AccessRecordEntity } from "../persistence/AccessRecord.Entity";
 
 export class AccessRecordRepository implements IAccessRecordRepository{
@@ -45,6 +45,14 @@ export class AccessRecordRepository implements IAccessRecordRepository{
             order: { entry_date_time_access_record: "DESC" }
         });
         return entities.map(entity => this.toDomain(entity));
+    }
+    async countOpenRecords(): Promise<OpenAccessRecordsCount> {
+        const repository = this.dataSource.getRepository(AccessRecordEntity);
+        const [institutional, visitors] = await Promise.all([
+            repository.count({ where: { exit_date_time_access_record: IsNull(), visitor_id_access_record: IsNull() } }),
+            repository.count({ where: { exit_date_time_access_record: IsNull(), visitor_id_access_record: Not(IsNull()) } }),
+        ]);
+        return { institutional, visitors };
     }
     async findOpenRecordByPlate(plate: string): Promise<AccessRecord | null> {
         const entity = await this.dataSource.getRepository(AccessRecordEntity).findOne({
