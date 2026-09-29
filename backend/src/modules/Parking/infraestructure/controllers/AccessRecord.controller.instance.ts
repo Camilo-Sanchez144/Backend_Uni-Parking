@@ -23,7 +23,7 @@ const AccessRecordControllerInstance = new AccessRecordController(
     new RegisterEntryVisitorUseCase(visitorRepository, parkingZoneRepository ,accessRecordRepository),
     new RegisterExitVisitorUseCase(accessRecordRepository, parkingZoneRepository),
     new GetOpenAccessRecordsUseCase(accessRecordRepository),
-    new GethistoricalByPlateUseCase(accessRecordRepository),
+    new GethistoricalByPlateUseCase(accessRecordRepository, vehicleRepository),
     new GetVehicleStatusUseCase(accessRecordRepository)
 )
 

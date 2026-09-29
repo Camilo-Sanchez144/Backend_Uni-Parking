@@ -89,8 +89,11 @@ const ALL_PERMISSIONS = PERMISSIONS.map((item) => item.name_permission);
 /**
  * Qué puede hacer cada rol (tabla RolePermission).
  *
- * Mientras el backend no compruebe que un vehículo o un historial es de quien lo pide, el
- * userEstandar solo recibe permisos que no exponen datos de otras personas.
+ * El userEstandar solo recibe permisos que no exponen datos de otras personas: para
+ * `access-record:historical`, `GethistoricalByPlateUseCase` comprueba que la placa
+ * consultada sea de su propia cuenta (PEN-030). `access-record:read-open` sigue sin
+ * dársele: expone las placas de todo el mundo y todavía no hay una versión que solo
+ * cuente, sin identificarlas.
  */
 export const ROLE_PERMISSIONS: Record<number, readonly string[]> = {
   [ROLE_IDS.USER_ESTANDAR]: [
@@ -98,6 +101,7 @@ export const ROLE_PERMISSIONS: Record<number, readonly string[]> = {
     "parking-zone:read-by-type",
     "vehicle:create",
     "user:read-one",
+    "access-record:historical",
   ],
   [ROLE_IDS.VIGILANTE]: [
     // Lo que usa hoy el panel de seguridad del frontend.

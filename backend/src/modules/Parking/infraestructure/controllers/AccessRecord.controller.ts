@@ -1,5 +1,6 @@
-import { GethistoricalByPlateUseCase } from './../../application/use-cases/GethistoricalByPlateUseCase';
+import { GetHistoricalError, GethistoricalByPlateUseCase } from './../../application/use-cases/GethistoricalByPlateUseCase';
 import { Request, Response } from "express";
+import { DecodedIdToken } from "firebase-admin/auth";
 import { GetOpenAccessRecordsUseCase } from "../../application/use-cases/GetOpenAccessRecordsUseCase";
 import { RegisterEntryUseCase } from "../../application/use-cases/RegisterEntryUseCase";
 import { RegisterEntryVisitorUseCase } from "../../application/use-cases/RegisterEntryVisitorUseCase";
@@ -58,9 +59,19 @@ export class AccessRecordController {
     getVehiclehistoricalByPlate = async (req: Request, res: Response) => {
         try {
             const plate = String(req.params.plate)
-            const vehicle = await this.gethistoricalByPlate.execute(plate);
+            // authorize ya validó el token y lo dejó decodificado en req.user.
+            const requester = (req as any).user as DecodedIdToken;
+            const vehicle = await this.gethistoricalByPlate.execute({
+                plate,
+                requesterUid: requester.uid,
+                requesterRoleId: requester.rolId,
+            });
             res.status(200).send(vehicle);
         } catch (err) {
+            if (err instanceof GetHistoricalError) {
+                res.status(err.statusCode).json({ error: err.message });
+                return;
+            }
             if (err instanceof Error) {
                 res.status(500).json({ error: "Error al consultar el estado del vehículo", details: err.message });
             }
