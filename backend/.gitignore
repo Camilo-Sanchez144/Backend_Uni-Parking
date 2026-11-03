@@ -1,5 +1,5 @@
 **/node_modules/
 **/dist/
-**.env
+.env
 backend\.env
 C:\Users\migue\OneDrive\Documents\GitHub\Backend_Uni-Parking\backend\.env
