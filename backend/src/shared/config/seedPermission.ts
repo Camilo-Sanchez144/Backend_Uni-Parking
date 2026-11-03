@@ -98,6 +98,7 @@ export const ROLE_PERMISSIONS: Record<number, readonly string[]> = {
     "parking-zone:read-by-type",
     "vehicle:create",
     "user:read-one",
+    "access-record:historical",
   ],
   [ROLE_IDS.VIGILANTE]: [
     // Lo que usa hoy el panel de seguridad del frontend.
