@@ -5,6 +5,7 @@ import visitorRoutes from '../modules/Visitors/infraestructure/routes/Visitor.ro
 import incidentRoutes from '../modules/Incidents/infraestructure/routes/Incident.routes'
 import AccessRecord from '../modules/Parking/infraestructure/routes/AccessRecord.routes'
 import parkingZoneRoutes from '../modules/Parking/infraestructure/routes/ParkingZone.routes'
+import { AppDataSource } from "../shared/config/database";
 
 export function createApp() {
   const app = express();
@@ -17,6 +18,10 @@ export function createApp() {
   app.use('/incidents', incidentRoutes);
   app.use('/parking', AccessRecord);
   app.use('/parkingZone', parkingZoneRoutes);
+  app.get('/health', async (_req, res) => {
+    await AppDataSource.query('SELECT 1');
+    res.send('ok');
+  });
   
   return app;
 }
