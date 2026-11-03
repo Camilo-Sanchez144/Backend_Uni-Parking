@@ -20,4 +20,5 @@ export const AppDataSource = new DataSource({
   entities: [VehicleEntity, RoleEntity, PermissionEntity, RolePermissionEntity, UserEntity, VisitorEntity, IncidentEntity, AccessRecordEntity, ParkingZoneEntity],
   // En producción no se toca el esquema solo: ahí los cambios de tablas van con migraciones.
   synchronize: process.env.NODE_ENV !== "production",
+  ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
 });
